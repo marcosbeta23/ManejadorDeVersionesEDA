@@ -1,6 +1,6 @@
 # Obligatorio EDA 2025 - Manejador de Versiones
 
-Autores: []  
+Autores: Marcos Betancor  
 Fecha: Octubre 2025  
 Curso: Estructuras de Datos y Algoritmos
 
@@ -109,6 +109,7 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
+
 
 
 
