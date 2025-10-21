@@ -41,21 +41,21 @@ make valgrind
 
 ## 📊 Estado del Proyecto
 
-### ✅ Estructuras de Datos (21 Oct) - COMPLETADO
+### ✅ Estructuras de Datos - COMPLETADO
 - [x] `nodo_modificacion` - Sistema de deltas
 - [x] `nodo_version` - Árbol n-ario
 - [x] `nodo_archivo` - Estructura principal
 - [x] Funciones auxiliares completas
 - [x] Compila sin errores
 
-### Fase 1 - Control Intermedio (22 Oct)
+### Fase 1 - Control Intermedio 
 - [x] CrearArchivo - IMPLEMENTADO
 - [x] InsertarLinea
 - [x] MostrarTexto
 - [ ] BorrarLinea
 - [ ] BorrarArchivo
 
-### Fase 2 - Entrega Final (9 Nov)
+### Fase 2 - Entrega Final 
 - [ ] CrearVersion (árbol completo)
 - [ ] BorrarVersion
 - [ ] MostrarVersiones
@@ -109,4 +109,5 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
+
 
