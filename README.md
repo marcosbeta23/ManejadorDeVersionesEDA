@@ -1,8 +1,8 @@
 # Obligatorio EDA 2025 - Manejador de Versiones
 
-**Autores:** [TUS NOMBRES]  
-**Fecha:** Octubre 2025  
-**Curso:** Estructuras de Datos y Algoritmos
+Autores: []  
+Fecha: Octubre 2025  
+Curso: Estructuras de Datos y Algoritmos
 
 ## 📋 Descripción
 
@@ -109,6 +109,7 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
+
 
 
 
