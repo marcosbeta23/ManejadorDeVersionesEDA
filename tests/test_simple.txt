@@ -1,0 +1,11 @@
+prueba
+InsertarLinea(1, Primera línea del archivo, 1)
+InsertarLinea(1, Segunda línea agregada, 2)
+InsertarLinea(1, Tercera línea de texto, 3)
+InsertarLinea(1, Línea insertada en medio, 2)
+MostrarTexto(1)
+InsertarLinea(2, Versión 2 línea 1, 1)
+InsertarLinea(2, Versión 2 línea 2, 2)
+MostrarTexto(2)
+MostrarTexto(1)
+salir
