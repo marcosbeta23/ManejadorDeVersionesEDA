@@ -34,7 +34,28 @@ TipoRet BorrarArchivo(Archivo &a){
 // Se asume como precondición que a referencia a un archivo (en particular a es distinto a NULL).
 // Esta operación se ejecuta al final de una sesión de trabajo con un archivo.
 	
-	return NO_IMPLEMENTADA;
+	// Validar que el archivo existe
+	if (a == nullptr) {
+		return ERROR;
+	}
+	
+	// Liberar todas las versiones (y recursivamente todas las modificaciones)
+	// Esta función libera:
+	// - Todas las versiones en la lista de hermanos
+	// - Para cada versión: todas sus modificaciones
+	// - Para cada modificación: el texto si es INSERCION
+	liberarArbolVersiones(a->primeraVersion);
+	
+	// Liberar el nombre del archivo
+	delete[] a->nombre;
+	
+	// Liberar la estructura del archivo
+	delete a;
+	
+	// Asignar NULL al puntero
+	a = nullptr;
+	
+	return OK;
 }
 
 

@@ -1,0 +1,10 @@
+prueba
+InsertarLinea(1, Primera linea, 1)
+InsertarLinea(1, Segunda linea, 2)
+InsertarLinea(1, Tercera linea, 3)
+MostrarTexto(1)
+BorrarLinea(1, 2)
+MostrarTexto(1)
+InsertarLinea(2, Version 2, 1)
+MostrarTexto(2)
+salir
