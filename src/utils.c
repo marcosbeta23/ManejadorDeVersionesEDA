@@ -29,7 +29,6 @@ void liberarString(char*& str) {
     }
 }
 
-
 // ============================================
 // UTILIDADES DE RECONSTRUCCIÓN DE TEXTO
 // ============================================
@@ -39,18 +38,15 @@ ListaLineas crearListaLineas() {
 }
 
 void insertarLineaEnLista(ListaLineas& lista, unsigned int nroLinea, const char* texto) {
-    // Crear nuevo nodo
     nodo_linea* nuevo = new nodo_linea;
     nuevo->texto = copiarString(texto);
     nuevo->numero = nroLinea;
     nuevo->siguiente = nullptr;
     
-    // Caso: lista vacía o insertar al inicio
     if (lista == nullptr || nroLinea == 1) {
         nuevo->siguiente = lista;
         lista = nuevo;
         
-        // Renumerar líneas siguientes
         nodo_linea* actual = nuevo->siguiente;
         unsigned int num = nroLinea + 1;
         while (actual != nullptr) {
@@ -60,7 +56,6 @@ void insertarLineaEnLista(ListaLineas& lista, unsigned int nroLinea, const char*
         return;
     }
     
-    // Buscar posición de inserción
     nodo_linea* anterior = lista;
     unsigned int pos = 1;
     
@@ -69,11 +64,9 @@ void insertarLineaEnLista(ListaLineas& lista, unsigned int nroLinea, const char*
         pos++;
     }
     
-    // Insertar
     nuevo->siguiente = anterior->siguiente;
     anterior->siguiente = nuevo;
     
-    // Renumerar líneas siguientes
     nodo_linea* actual = nuevo->siguiente;
     unsigned int num = nroLinea + 1;
     while (actual != nullptr) {
@@ -85,14 +78,12 @@ void insertarLineaEnLista(ListaLineas& lista, unsigned int nroLinea, const char*
 void borrarLineaEnLista(ListaLineas& lista, unsigned int nroLinea) {
     if (lista == nullptr) return;
     
-    // Caso: borrar primera línea
     if (nroLinea == 1) {
         nodo_linea* temp = lista;
         lista = lista->siguiente;
         liberarString(temp->texto);
         delete temp;
         
-        // Renumerar líneas restantes
         nodo_linea* actual = lista;
         unsigned int num = 1;
         while (actual != nullptr) {
@@ -102,7 +93,6 @@ void borrarLineaEnLista(ListaLineas& lista, unsigned int nroLinea) {
         return;
     }
     
-    // Buscar línea anterior a la que se va a borrar
     nodo_linea* anterior = lista;
     unsigned int pos = 1;
     
@@ -111,15 +101,13 @@ void borrarLineaEnLista(ListaLineas& lista, unsigned int nroLinea) {
         pos++;
     }
     
-    if (anterior->siguiente == nullptr) return;  // Línea no existe
+    if (anterior->siguiente == nullptr) return;
     
-    // Borrar
     nodo_linea* temp = anterior->siguiente;
     anterior->siguiente = temp->siguiente;
     liberarString(temp->texto);
     delete temp;
     
-    // Renumerar líneas restantes
     nodo_linea* actual = anterior->siguiente;
     unsigned int num = nroLinea;
     while (actual != nullptr) {
@@ -155,7 +143,6 @@ unsigned int contarLineas(ListaLineas lista) {
     return count;
 }
 
-
 // ============================================
 // UTILIDADES DE VERSIONES
 // ============================================
@@ -181,3 +168,24 @@ Version buscarVersionEnLista(Version lista, int numero) {
     }
     return nullptr;
 }
+
+// Agrega una modificación al final de la lista de modificaciones de una versión
+void agregarModificacion(Version ver, Modificacion mod) {
+    if (ver == nullptr || mod == nullptr) return;
+    
+    // Si la versión no tiene modificaciones, esta es la primera
+    if (ver->primeraModificacion == nullptr) {
+        ver->primeraModificacion = mod;
+        return;
+    }
+    
+    // Buscar el último nodo de la lista de modificaciones
+    Modificacion actual = ver->primeraModificacion;
+    while (actual->siguiente != nullptr) {
+        actual = actual->siguiente;
+    }
+    
+    // Agregar al final
+    actual->siguiente = mod;
+}
+

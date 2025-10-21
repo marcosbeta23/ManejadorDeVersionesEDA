@@ -89,4 +89,10 @@ void aplicarModificaciones(ListaLineas& texto, Modificacion mods);
 // Retorna: puntero a la versión encontrada o NULL
 Version buscarVersionEnLista(Version lista, int numero);
 
+// Agrega una modificación al final de la lista de modificaciones de una versión
+// Parámetros:
+//   - ver: versión donde agregar la modificación
+//   - mod: modificación a agregar
+void agregarModificacion(Version ver, Modificacion mod);
+
 #endif // UTILS_H
