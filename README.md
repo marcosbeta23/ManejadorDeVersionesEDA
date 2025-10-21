@@ -49,7 +49,7 @@ make valgrind
 - [x] Compila sin errores
 
 ### Fase 1 - Control Intermedio 
-- [x] CrearArchivo - IMPLEMENTADO
+- [x] CrearArchivo 
 - [x] InsertarLinea
 - [x] MostrarTexto
 - [ ] BorrarLinea
@@ -109,5 +109,6 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
+
 
 
