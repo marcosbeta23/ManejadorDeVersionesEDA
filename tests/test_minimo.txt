@@ -1,0 +1,4 @@
+miarchivo
+InsertarLinea(1, Hola mundo, 1)
+MostrarTexto(1)
+salir
