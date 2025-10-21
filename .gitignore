@@ -1,0 +1,20 @@
+# Archivos compilados
+*.o
+*.out
+*.exe
+main
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de depuración
+valgrind-out.txt
