@@ -160,7 +160,44 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 TipoRet MostrarTexto(Archivo a, char * version){
 // Esta función muestra el texto completo de la version, teniendo en cuenta los cambios realizados en dicha versión y en las versiones ancestras, de la cual ella depende.
 
-	return NO_IMPLEMENTADA;
+	// Validar archivo
+	if (a == nullptr) {
+		return ERROR;
+	}
+
+	// Parsear versión (Fase 1: solo número simple)
+	int numVersion = atoi(version);
+	
+	// Buscar la versión
+	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
+	
+	// Validar que la versión existe
+	if (ver == nullptr) {
+		return ERROR;
+	}
+
+	// Crear lista temporal para reconstruir el texto
+	ListaLineas texto = crearListaLineas();
+	
+	// Aplicar todas las modificaciones en orden
+	aplicarModificaciones(texto, ver->primeraModificacion);
+	
+	// Imprimir formato: "Archivo: nombre - Version N"
+	cout << "Archivo: " << a->nombre << " - Version " << numVersion << endl << endl;
+	
+	// Verificar si hay líneas
+	if (texto == nullptr) {
+		// Versión sin líneas (todas fueron borradas o nunca se insertaron)
+		cout << "(versión sin líneas)" << endl;
+	} else {
+		// Imprimir todas las líneas numeradas
+		imprimirListaLineas(texto);
+	}
+	
+	// Liberar memoria temporal
+	liberarListaLineas(texto);
+	
+	return OK;
 }
 
 TipoRet MostrarCambios(Archivo a, char * version){
