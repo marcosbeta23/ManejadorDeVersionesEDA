@@ -154,7 +154,72 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 // No se puede borrar una línea de una versión que tenga subversiones creadas.
 // En caso que TipoRet sea ERROR, en error se debe cargar cuál es el mismo.
 
-	return NO_IMPLEMENTADA;
+	// Validación: archivo debe existir
+	if (a == nullptr) {
+		strcpy(error, "Archivo no existe");
+		return ERROR;
+	}
+	
+	// Validación: versión no puede ser NULL
+	if (version == nullptr) {
+		strcpy(error, "Version es NULL");
+		return ERROR;
+	}
+	
+	// Validación: nroLinea debe ser al menos 1
+	if (nroLinea < 1) {
+		strcpy(error, "Numero de linea invalido (debe ser >= 1)");
+		return ERROR;
+	}
+	
+	// FASE 1: Solo versiones de primer nivel
+	// Parsear número de versión
+	int numVersion = atoi(version);
+	
+	if (numVersion <= 0) {
+		strcpy(error, "Version invalida (debe ser numero positivo)");
+		return ERROR;
+	}
+	
+	// Buscar la versión en el archivo
+	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
+	
+	// Validar que la versión existe
+	if (ver == nullptr) {
+		strcpy(error, "Version no existe");
+		return ERROR;
+	}
+	
+	// Reconstruir texto actual para saber cuántas líneas hay
+	ListaLineas texto = crearListaLineas();
+	aplicarModificaciones(texto, ver->primeraModificacion);
+	unsigned int numLineas = contarLineas(texto);
+	
+	// Validar que hay líneas para borrar
+	if (numLineas == 0) {
+		liberarListaLineas(texto);
+		strcpy(error, "No hay lineas para borrar (version vacia)");
+		return ERROR;
+	}
+	
+	// Validar que nroLinea está entre 1 y n (NO se puede borrar en n+1)
+	if (nroLinea > numLineas) {
+		liberarListaLineas(texto);
+		strcpy(error, "Numero de linea fuera de rango (no existe)");
+		return ERROR;
+	}
+	
+	// Liberar texto temporal (ya no lo necesitamos)
+	liberarListaLineas(texto);
+	
+	// Crear modificación de tipo BORRADO
+	// Para BORRADO, el texto es NULL (no se necesita guardar texto)
+	Modificacion mod = crearModificacion(BORRADO, nroLinea, nullptr);
+	
+	// Agregar modificación a la versión
+	agregarModificacion(ver, mod);
+	
+	return OK;
 }
 
 TipoRet MostrarTexto(Archivo a, char * version){
