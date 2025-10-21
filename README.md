@@ -51,7 +51,7 @@ make valgrind
 ### Fase 1 - Control Intermedio (22 Oct)
 - [x] CrearArchivo - IMPLEMENTADO
 - [x] InsertarLinea
-- [ ] MostrarTexto
+- [x] MostrarTexto
 - [ ] BorrarLinea
 - [ ] BorrarArchivo
 
@@ -109,3 +109,4 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
+
