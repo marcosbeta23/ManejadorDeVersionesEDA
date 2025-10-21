@@ -16,6 +16,10 @@ Archivo CrearArchivo(char * nombre){
 // Crea el archivo con el nombre especificado y lo inicializa sin contenido (vacío).
 // El archivo creado es retornado.
 // Esta operación se ejecuta al inicio de una sesión de trabajo con un archivo.
+	// Validación: nombre no puede ser NULL o vacío
+	if (nombre == nullptr || strlen(nombre) == 0) {
+        return nullptr;  // O manejar error de otra forma
+    }
 	Archivo a = new nodo_archivo;
 	a->nombre = new char[strlen(nombre) + 1];
 	strcpy(a->nombre, nombre);
@@ -69,7 +73,78 @@ TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nro
 // Notar que el crear un archivo, éste no es editable hasta que no se crea al menos una versión del mismo. Sólo las versiones de un archivo son editables (se pueden insertar o suprimir líneas), siempre que no tengan subversiones creadas.
 // En caso que TipoRet sea ERROR, en error se debe cargar cuál es el mismo.
 
-	return NO_IMPLEMENTADA;
+	// Validación: archivo debe existir
+	if (a == nullptr) {
+		strcpy(error, "Archivo no existe");
+		return ERROR;
+	}
+	
+	// Validación: versión y linea no pueden ser NULL
+	if (version == nullptr || linea == nullptr) {
+		strcpy(error, "Version o linea son NULL");
+		return ERROR;
+	}
+	
+	// Validación: nroLinea debe ser al menos 1
+	if (nroLinea < 1) {
+		strcpy(error, "Numero de linea invalido (debe ser >= 1)");
+		return ERROR;
+	}
+	
+	// FASE 1: Solo versiones de primer nivel (solo números: "1", "2", "3"...)
+	// Parsear número de versión
+	int numVersion = atoi(version);
+	
+	if (numVersion <= 0) {
+		strcpy(error, "Version invalida (debe ser numero positivo)");
+		return ERROR;
+	}
+	
+	// Buscar la versión en el archivo
+	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
+	
+	// Si la versión NO existe, crearla
+	if (ver == nullptr) {
+		// Crear nueva versión
+		ver = crearVersion(numVersion);
+		
+		// Agregar a la lista de versiones del archivo
+		if (a->primeraVersion == nullptr) {
+			// Es la primera versión
+			a->primeraVersion = ver;
+		} else {
+			// Agregar al final de la lista
+			Version actual = a->primeraVersion;
+			while (actual->siguienteHermano != nullptr) {
+				actual = actual->siguienteHermano;
+			}
+			actual->siguienteHermano = ver;
+		}
+	}
+	
+	// Validar que nroLinea sea válido (1 a n+1 donde n = líneas actuales)
+	// Para saber cuántas líneas tiene, necesitamos reconstruir el texto
+	ListaLineas texto = crearListaLineas();
+	aplicarModificaciones(texto, ver->primeraModificacion);
+	unsigned int numLineas = contarLineas(texto);
+	
+	// nroLinea debe estar entre 1 y numLineas+1
+	if (nroLinea > numLineas + 1) {
+		liberarListaLineas(texto);
+		strcpy(error, "Numero de linea fuera de rango (muy grande)");
+		return ERROR;
+	}
+	
+	// Liberar texto temporal (ya no lo necesitamos)
+	liberarListaLineas(texto);
+	
+	// Crear modificación de tipo INSERCION
+	Modificacion mod = crearModificacion(INSERCION, nroLinea, linea);
+	
+	// Agregar modificación a la versión
+	agregarModificacion(ver, mod);
+	
+	return OK;
 }
 
 TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * error){
