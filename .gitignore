@@ -10,6 +10,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
+*.tmp
+.tmp
 
 # Archivos de IDE
 .vscode/
@@ -18,3 +20,9 @@ Thumbs.db
 
 # Archivos de depuración
 valgrind-out.txt
+valgrind_output.txt
+
+# Archivos de documentación temporal/personal
+BUG_BUCLE_SOLUCION.md
+TESTS_ARREGLADOS.md
+SOLUCION_FINAL_TESTS.md

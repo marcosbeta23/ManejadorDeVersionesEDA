@@ -1,0 +1,6 @@
+miarchivo
+InsertarLinea(1, Primera linea, 1)
+InsertarLinea(1, Segunda linea, 2)
+InsertarLinea(1, Tercera linea, 3)
+MostrarTexto(1)
+salir
