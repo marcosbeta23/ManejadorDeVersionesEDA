@@ -173,4 +173,31 @@ bool validarPadreExiste(Version primeraVersion, int* secuencia, int longitud);
 //   Hermanos [1,3], nuevo 2 → true (llena hueco)
 bool validarSinHuecos(Version padre, Version primeraVersion, int numeroNuevo);
 
+
+// ============================================
+// DESPLAZAMIENTO Y RENUMERACIÓN (FASE 2)
+// ============================================
+
+// Renumera recursivamente un subárbol completo
+// Parámetros:
+//   - raiz: nodo raíz del subárbol a renumerar
+//   - delta: cantidad a sumar/restar al número (ej: +1 para desplazar derecha, -1 para izquierda)
+// Efecto: Modifica el número del nodo y de todos sus descendientes
+// Ejemplos:
+//   RenumerarSubarbol(nodo 2.3, +1) → nodo se convierte en 3.3
+//   RenumerarSubarbol(nodo 2 con hijos 2.1, 2.2, +1) → nodo 3 con hijos 3.1, 3.2
+void renumerarSubarbol(Version raiz, int delta);
+
+// Desplaza versiones hermanas desde una posición y las renumera
+// Parámetros:
+//   - padre: nodo padre (NULL para primer nivel)
+//   - primeraVersion: referencia a la primera versión del nivel (solo para primer nivel)
+//   - numeroInicio: número desde el cual desplazar (inclusive)
+//   - delta: cantidad a desplazar (+1 para derecha, -1 para izquierda)
+// Efecto: Todas las versiones con número >= numeroInicio se desplazan
+// Ejemplos:
+//   Hermanos [1,2,3], desplazar desde 2 con delta +1 → [1,3,4]
+//   Hermanos [1,2,3,4], desplazar desde 2 con delta -1 → [1,1,2,3]
+void desplazarYRenumerar(Version padre, Version& primeraVersion, int numeroInicio, int delta);
+
 #endif // UTILS_H

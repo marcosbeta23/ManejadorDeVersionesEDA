@@ -417,3 +417,69 @@ bool validarSinHuecos(Version padre, Version primeraVersion, int numeroNuevo) {
     return true;
 }
 
+
+// ============================================
+// DESPLAZAMIENTO Y RENUMERACIÓN (FASE 2)
+// ============================================
+
+void renumerarSubarbol(Version raiz, int delta) {
+    // Caso base: si el nodo es NULL, no hay nada que renumerar
+    if (raiz == nullptr) {
+        return;
+    }
+    
+    // Paso 1: Cambiar el número del nodo actual
+    raiz->numero += delta;
+    
+    // Paso 2: Recursivamente renumerar todos los hijos
+    // Comenzar por el primer hijo
+    Version hijo = raiz->primerHijo;
+    
+    // Recorrer todos los hermanos (hijos del nodo actual)
+    while (hijo != nullptr) {
+        // Llamada recursiva para renumerar todo el subárbol de este hijo
+        renumerarSubarbol(hijo, delta);
+        
+        // Avanzar al siguiente hermano
+        hijo = hijo->siguienteHermano;
+    }
+}
+
+void desplazarYRenumerar(Version padre, Version& primeraVersion, int numeroInicio, int delta) {
+    // Determinar la lista de hermanos a procesar
+    Version hermanos = nullptr;
+    
+    if (padre != nullptr) {
+        // Si hay padre, trabajar con sus hijos
+        hermanos = padre->primerHijo;
+    } else {
+        // Si no hay padre, trabajar con versiones de primer nivel
+        hermanos = primeraVersion;
+    }
+    
+    // Si no hay hermanos, no hay nada que desplazar
+    if (hermanos == nullptr) {
+        return;
+    }
+    
+    // Recorrer la lista de hermanos y desplazar los que cumplen la condición
+    Version actual = hermanos;
+    
+    while (actual != nullptr) {
+        // Si el número del nodo actual es >= numeroInicio, desplazarlo
+        if (actual->numero >= numeroInicio) {
+            // Renumerar este nodo y todo su subárbol
+            renumerarSubarbol(actual, delta);
+        }
+        
+        // Avanzar al siguiente hermano
+        actual = actual->siguienteHermano;
+    }
+    
+    // IMPORTANTE: Si estamos en el primer nivel y cambiamos números,
+    // puede que necesitemos reordenar la lista de hermanos
+    // Sin embargo, según la especificación, los hermanos NO necesitan
+    // estar ordenados numéricamente, solo deben mantener el orden
+    // de creación. Por lo tanto, NO reordenamos.
+}
+
