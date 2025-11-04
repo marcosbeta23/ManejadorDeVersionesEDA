@@ -26,3 +26,18 @@ valgrind_output.txt
 BUG_BUCLE_SOLUCION.md
 TESTS_ARREGLADOS.md
 SOLUCION_FINAL_TESTS.md
+
+# Archivos de planificación (no necesarios para entrega)
+plan_solo_fase2_eda.md
+PLAN_FASE1_ORGANIZACION.md
+PLAN_FASE2_ORGANIZACION.md
+fase1.md
+organizacion_equipo_eda.md
+guia_obligatorio_eda.md
+
+# Ejecutables de tests
+test_parser
+test_navegacion
+
+# Scripts de conversión temporales
+convert_to_unix.sh
