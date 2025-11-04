@@ -95,4 +95,53 @@ Version buscarVersionEnLista(Version lista, int numero);
 //   - mod: modificación a agregar
 void agregarModificacion(Version ver, Modificacion mod);
 
+
+// ============================================
+// PARSER DE VERSIONES JERÁRQUICAS (FASE 2)
+// ============================================
+
+// Parsea un string de versión jerárquica (ej: "1.2.3.4")
+// Convierte el string en un array de números para navegar el árbol
+// Parámetros:
+//   - version: string de versión a parsear (ej: "1", "2.3", "1.2.4.5")
+//   - longitud: puntero donde guardar la cantidad de niveles
+// Retorna: array dinámico de enteros con los números, o NULL si es inválido
+// Nota: El caller debe liberar el array con liberarArrayVersion()
+// Ejemplos:
+//   "1" → [1], longitud = 1
+//   "2.3" → [2, 3], longitud = 2
+//   "1.2.4" → [1, 2, 4], longitud = 3
+int* parsearVersion(const char* version, int* longitud);
+
+// Libera el array de versión creado por parsearVersion
+// Parámetros:
+//   - array: array a liberar (se asigna NULL después)
+void liberarArrayVersion(int*& array);
+
+
+// ============================================
+// NAVEGACIÓN DEL ÁRBOL N-ARIO (FASE 2)
+// ============================================
+
+// Busca un hijo específico por número en la lista de hijos de un padre
+// Parámetros:
+//   - padre: nodo padre donde buscar (puede ser NULL)
+//   - numero: número del hijo a buscar
+// Retorna: puntero al hijo encontrado o NULL si no existe
+// Nota: Busca en la lista de hermanos comenzando por padre->primerHijo
+Version buscarHijo(Version padre, int numero);
+
+// Navega el árbol siguiendo una secuencia de números
+// Parámetros:
+//   - primeraVersion: raíz del árbol (lista de versiones de primer nivel)
+//   - secuencia: array de números que indica el camino (ej: [2, 3, 1])
+//   - longitud: cantidad de números en la secuencia
+// Retorna: puntero a la versión encontrada o NULL si no existe
+// Ejemplos:
+//   NavegarAVersion(a, [1], 1) → versión 1
+//   NavegarAVersion(a, [2, 3], 2) → versión 2.3
+//   NavegarAVersion(a, [1, 2, 3, 4], 4) → versión 1.2.3.4
+//   NavegarAVersion(a, [5, 1], 2) → NULL (no existe)
+Version navegarAVersion(Version primeraVersion, int* secuencia, int longitud);
+
 #endif // UTILS_H
