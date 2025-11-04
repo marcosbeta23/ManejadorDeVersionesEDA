@@ -428,21 +428,13 @@ void renumerarSubarbol(Version raiz, int delta) {
         return;
     }
     
-    // Paso 1: Cambiar el número del nodo actual
+    // Cambiar el número del nodo actual
     raiz->numero += delta;
     
-    // Paso 2: Recursivamente renumerar todos los hijos
-    // Comenzar por el primer hijo
-    Version hijo = raiz->primerHijo;
-    
-    // Recorrer todos los hermanos (hijos del nodo actual)
-    while (hijo != nullptr) {
-        // Llamada recursiva para renumerar todo el subárbol de este hijo
-        renumerarSubarbol(hijo, delta);
-        
-        // Avanzar al siguiente hermano
-        hijo = hijo->siguienteHermano;
-    }
+    // IMPORTANTE: Los hijos mantienen su numeración relativa al padre.
+    // NO renumeramos los hijos, solo el padre.
+    // Ejemplo: Si 2.1 se desplaza a 3, se convierte en 3.1 (el hijo sigue siendo .1)
+    // El número de los hijos permanece igual, solo cambia el número del padre.
 }
 
 void desplazarYRenumerar(Version padre, Version& primeraVersion, int numeroInicio, int delta) {

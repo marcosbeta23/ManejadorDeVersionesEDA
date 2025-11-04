@@ -63,12 +63,144 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 // Crea una nueva versión del archivo si la versión especificada cumple con las siguientes reglas:
 // - El padre de la nueva versión a crear ya debe existir. Por ejemplo, si creo la versión 2.15.1, la versión 2.15 ya debe existir.
 // Las versiones del primer nivel no siguen esta regla, ya que no tienen versión padre.
-// - No pueden quedar “huecos” entre versiones hermanas. Por ejemplo, si creamos la versión 2.15.3, las versiones 2.15.1 y 2.15.2 ya deben existir.
+// - No pueden quedar "huecos" entre versiones hermanas. Por ejemplo, si creamos la versión 2.15.3, las versiones 2.15.1 y 2.15.2 ya deben existir.
 // Ver ejemplo en la letra.
 
-	cout << "VERSION A INSERTAR: " << version << endl;
-
-	return NO_IMPLEMENTADA;
+	// Validación: archivo debe existir
+	if (a == nullptr) {
+		strcpy(error, "Archivo no existe");
+		return ERROR;
+	}
+	
+	// Validación: string de versión debe ser válido
+	if (version == nullptr || strlen(version) == 0) {
+		strcpy(error, "Version invalida");
+		return ERROR;
+	}
+	
+	// PASO 1: PARSEAR STRING DE VERSIÓN
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
+	
+	if (secuencia == nullptr) {
+		strcpy(error, "Formato de version invalido");
+		return ERROR;
+	}
+	
+	// PASO 2: VALIDAR QUE EL PADRE EXISTE
+	if (!validarPadreExiste(a->primeraVersion, secuencia, longitud)) {
+		strcpy(error, "El padre de la version no existe");
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// PASO 3: OBTENER NÚMERO DE LA NUEVA VERSIÓN
+	int numeroNuevo = secuencia[longitud - 1];
+	
+	// PASO 4: DETERMINAR EL PADRE
+	Version padre = nullptr;
+	if (longitud > 1) {
+		// Es una subversión, navegar al padre
+		padre = navegarAVersion(a->primeraVersion, secuencia, longitud - 1);
+		if (padre == nullptr) {
+			strcpy(error, "Error al navegar al padre");
+			liberarArrayVersion(secuencia);
+			return ERROR;
+		}
+	}
+	// Si longitud == 1, padre = nullptr (es versión de primer nivel)
+	
+	// PASO 5: VALIDAR SIN HUECOS
+	if (!validarSinHuecos(padre, a->primeraVersion, numeroNuevo)) {
+		strcpy(error, "Crear la version generaria huecos en la numeracion");
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// PASO 6: VERIFICAR SI EL NÚMERO YA EXISTE (DESPLAZAMIENTO)
+	Version hermanos = (padre != nullptr) ? padre->primerHijo : a->primeraVersion;
+	Version existente = (padre != nullptr) ? buscarHijo(padre, numeroNuevo) : buscarVersionEnLista(hermanos, numeroNuevo);
+	
+	if (existente != nullptr) {
+		// El número ya existe, desplazar hermanos posteriores hacia la derecha
+		desplazarYRenumerar(padre, a->primeraVersion, numeroNuevo, 1);
+	}
+	
+	// PASO 7: CREAR NUEVO NODO DE VERSIÓN
+	Version nuevaVersion = crearVersion(numeroNuevo);
+	if (nuevaVersion == nullptr) {
+		strcpy(error, "Error al crear nodo de version");
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// PASO 8: ESTABLECER PUNTERO AL PADRE
+	nuevaVersion->padre = padre;
+	
+	// PASO 9: INSERTAR EN LA LISTA DE HERMANOS
+	// Necesitamos insertar en orden numérico para mantener la lista ordenada
+	if (padre != nullptr) {
+		// Es una subversión, insertar en la lista de hijos del padre
+		if (padre->primerHijo == nullptr) {
+			// No hay hijos, este es el primero
+			padre->primerHijo = nuevaVersion;
+		} else {
+			// Hay hijos, insertar en orden numérico
+			Version actual = padre->primerHijo;
+			Version anterior = nullptr;
+			
+			// Buscar posición correcta
+			while (actual != nullptr && actual->numero < numeroNuevo) {
+				anterior = actual;
+				actual = actual->siguienteHermano;
+			}
+			
+			// Insertar en la posición encontrada
+			if (anterior == nullptr) {
+				// Insertar al principio
+				nuevaVersion->siguienteHermano = padre->primerHijo;
+				padre->primerHijo = nuevaVersion;
+			} else {
+				// Insertar después de anterior
+				nuevaVersion->siguienteHermano = anterior->siguienteHermano;
+				anterior->siguienteHermano = nuevaVersion;
+			}
+		}
+	} else {
+		// Es versión de primer nivel, insertar en a->primeraVersion
+		if (a->primeraVersion == nullptr) {
+			// No hay versiones, esta es la primera
+			a->primeraVersion = nuevaVersion;
+		} else {
+			// Hay versiones, insertar en orden numérico
+			Version actual = a->primeraVersion;
+			Version anterior = nullptr;
+			
+			// Buscar posición correcta
+			while (actual != nullptr && actual->numero < numeroNuevo) {
+				anterior = actual;
+				actual = actual->siguienteHermano;
+			}
+			
+			// Insertar en la posición encontrada
+			if (anterior == nullptr) {
+				// Insertar al principio
+				nuevaVersion->siguienteHermano = a->primeraVersion;
+				a->primeraVersion = nuevaVersion;
+			} else {
+				// Insertar después de anterior
+				nuevaVersion->siguienteHermano = anterior->siguienteHermano;
+				anterior->siguienteHermano = nuevaVersion;
+			}
+		}
+	}
+	
+	// PASO 10: LIBERAR MEMORIA TEMPORAL
+	liberarArrayVersion(secuencia);
+	
+	// Éxito
+	return OK;
 }
 
 TipoRet BorrarVersion(Archivo &a, char * version){
