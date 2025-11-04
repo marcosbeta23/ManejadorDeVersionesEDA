@@ -52,8 +52,8 @@ make valgrind
 - [x] CrearArchivo 
 - [x] InsertarLinea
 - [x] MostrarTexto
-- [x] BorrarLinea
-- [x] BorrarArchivo
+- [ ] BorrarLinea
+- [ ] BorrarArchivo
 
 ### Fase 2 - Entrega Final 
 - [ ] CrearVersion (árbol completo)
@@ -109,7 +109,6 @@ valgrind --leak-check=full ./main
 ---
 
 **Última actualización:** 21 de Octubre 2025
-
 
 
 
