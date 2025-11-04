@@ -329,3 +329,91 @@ Version navegarAVersion(Version primeraVersion, int* secuencia, int longitud) {
     return actual;
 }
 
+
+// ============================================
+// VALIDACIONES PARA CREARVERSION (FASE 2)
+// ============================================
+
+bool validarPadreExiste(Version primeraVersion, int* secuencia, int longitud) {
+    // Validaciones básicas
+    if (secuencia == nullptr || longitud <= 0) return false;
+    
+    // Si es versión de primer nivel (longitud == 1), no tiene padre, siempre válido
+    if (longitud == 1) return true;
+    
+    // Para versiones con padre, navegar hasta el padre
+    // El padre es todo menos el último número
+    // Ej: para "1.2.3", el padre es "1.2" (secuencia[0..longitud-2])
+    Version padre = navegarAVersion(primeraVersion, secuencia, longitud - 1);
+    
+    // Si el padre no existe, retornar false
+    return (padre != nullptr);
+}
+
+bool validarSinHuecos(Version padre, Version primeraVersion, int numeroNuevo) {
+    // Obtener la lista de hermanos
+    Version hermanos = nullptr;
+    
+    if (padre == nullptr) {
+        // Versiones de primer nivel
+        hermanos = primeraVersion;
+    } else {
+        // Hijos del padre
+        hermanos = padre->primerHijo;
+    }
+    
+    // Si no hay hermanos, cualquier número es válido (será el primero)
+    if (hermanos == nullptr) {
+        return (numeroNuevo == 1);  // El primer hijo debe ser 1
+    }
+    
+    // Recorrer la lista de hermanos y contar cuántos hay
+    int count = 0;
+    int maxNumero = 0;
+    bool numeroExiste = false;
+    
+    Version actual = hermanos;
+    while (actual != nullptr) {
+        count++;
+        if (actual->numero > maxNumero) {
+            maxNumero = actual->numero;
+        }
+        if (actual->numero == numeroNuevo) {
+            numeroExiste = true;
+        }
+        actual = actual->siguienteHermano;
+    }
+    
+    // Caso 1: El número ya existe → válido (será desplazamiento)
+    if (numeroExiste) {
+        return true;
+    }
+    
+    // Caso 2: El número nuevo es el siguiente consecutivo → válido
+    if (numeroNuevo == maxNumero + 1) {
+        return true;
+    }
+    
+    // Caso 3: El número nuevo llena un hueco existente → válido
+    // Verificar si hay huecos entre 1 y maxNumero
+    // Si el nuevo número está en un hueco, es válido
+    if (numeroNuevo > 0 && numeroNuevo < maxNumero) {
+        // Verificar si este número específicamente llena un hueco
+        return true;  // Si no existe y está en el rango, llena un hueco
+    }
+    
+    // Caso 4: El número nuevo crea un hueco → inválido
+    // Esto ocurre si numeroNuevo > maxNumero + 1
+    if (numeroNuevo > maxNumero + 1) {
+        return false;  // Crearía huecos en maxNumero+1, maxNumero+2, ...
+    }
+    
+    // Caso 5: numeroNuevo <= 0 → inválido
+    if (numeroNuevo <= 0) {
+        return false;
+    }
+    
+    // Por defecto, aceptar
+    return true;
+}
+

@@ -144,4 +144,33 @@ Version buscarHijo(Version padre, int numero);
 //   NavegarAVersion(a, [5, 1], 2) → NULL (no existe)
 Version navegarAVersion(Version primeraVersion, int* secuencia, int longitud);
 
+
+// ============================================
+// VALIDACIONES PARA CREARVERSION (FASE 2)
+// ============================================
+
+// Valida que el padre de una versión existe
+// Parámetros:
+//   - primeraVersion: raíz del árbol
+//   - secuencia: array de números de la versión a crear
+//   - longitud: cantidad de niveles
+// Retorna: true si el padre existe (o es versión de primer nivel), false si no
+// Ejemplos:
+//   Para crear "1.2.3", valida que "1.2" existe
+//   Para crear "1", siempre retorna true (no tiene padre)
+bool validarPadreExiste(Version primeraVersion, int* secuencia, int longitud);
+
+// Valida que no hay huecos entre hermanos
+// Parámetros:
+//   - padre: nodo padre (NULL para versiones de primer nivel)
+//   - primeraVersion: lista de hermanos (si padre es NULL)
+//   - numeroNuevo: número de la nueva versión a crear
+// Retorna: true si no hay huecos, false si los hay
+// Ejemplos:
+//   Hermanos [1,2,3], nuevo 4 → true (siguiente consecutivo)
+//   Hermanos [1,2,3], nuevo 2 → true (desplazamiento)
+//   Hermanos [1,2], nuevo 5 → false (hueco en 3 y 4)
+//   Hermanos [1,3], nuevo 2 → true (llena hueco)
+bool validarSinHuecos(Version padre, Version primeraVersion, int numeroNuevo);
+
 #endif // UTILS_H
