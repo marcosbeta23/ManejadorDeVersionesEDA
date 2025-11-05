@@ -1,6 +1,5 @@
 #!/bin/bash
 # Test de CrearVersion Completa
-# TARJETA 6 - Fase 2
 
 echo "==============================================="
 echo "  COMPILANDO TEST DE CREARVERSION"
@@ -10,12 +9,12 @@ echo ""
 # Compilar test
 g++ -std=c++17 -Wall -Wextra -g \
     test_crearversion.cpp \
-    src/archivo.c \
-    src/utils.c \
-    src/version.c \
-    src/mod.c \
+    ../src/archivo.c \
+    ../src/utils.c \
+    ../src/version.c \
+    ../src/mod.c \
     -o test_crearversion \
-    -I./include
+    -I../include
 
 if [ $? -ne 0 ]; then
     echo "❌ Error en compilación"
@@ -74,7 +73,6 @@ echo "==============================================="
 echo ""
 
 if [ $TEST_RESULT -eq 0 ] && [ "$LEAKS" -eq 0 ]; then
-    echo "✅ TARJETA 6 COMPLETADA"
     echo "   - Todos los tests pasaron"
     echo "   - 0 memory leaks"
     exit 0

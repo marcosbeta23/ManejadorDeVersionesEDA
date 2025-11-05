@@ -9,7 +9,7 @@
 
 using namespace std;
 
-// Crea una nueva versión
+// Crea un nodo de versión con el número especificado
 Version crearVersion(int numero) {
     Version ver = new nodo_version;
     ver->numero = numero;
@@ -20,41 +20,34 @@ Version crearVersion(int numero) {
     return ver;
 }
 
-// Libera una versión individual (sin sus hermanos ni hijos)
+// Libera una versión individual y sus modificaciones
 void liberarVersion(Version& ver) {
     if (ver == nullptr) return;
     
-    // Liberar todas las modificaciones de esta versión
     liberarListaModificaciones(ver->primeraModificacion);
     
     delete ver;
     ver = nullptr;
 }
 
-// Libera recursivamente todo el árbol de versiones
+// Libera recursivamente todo el árbol de versiones (hermanos e hijos)
 void liberarArbolVersiones(Version& raiz) {
     if (raiz == nullptr) return;
     
-    // Liberar hermanos (siguiente en la lista horizontal)
     liberarArbolVersiones(raiz->siguienteHermano);
-    
-    // Liberar hijos (subversiones - para Fase 2)
     liberarArbolVersiones(raiz->primerHijo);
     
-    // Liberar este nodo
     liberarVersion(raiz);
 }
 
-// Busca una versión por número (solo en primer nivel para Fase 1)
+// Busca recursivamente una versión por número en el árbol
 Version buscarVersion(Version raiz, int numero) {
     if (raiz == nullptr) return nullptr;
     
     if (raiz->numero == numero) return raiz;
     
-    // Buscar en hermanos
     Version encontrada = buscarVersion(raiz->siguienteHermano, numero);
     if (encontrada != nullptr) return encontrada;
     
-    // Buscar en hijos (para Fase 2 - ahora retornará nullptr)
     return buscarVersion(raiz->primerHijo, numero);
 }

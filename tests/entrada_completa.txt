@@ -1,0 +1,15 @@
+miarchivo
+CrearVersion(1)
+CrearVersion(2)
+CrearVersion(3)
+MostrarVersiones()
+CrearVersion(1.1)
+CrearVersion(1.2)
+MostrarVersiones()
+CrearVersion(2.1)
+CrearVersion(2.2)
+MostrarVersiones()
+CrearVersion(1.1.1)
+CrearVersion(1.1.2)
+MostrarVersiones()
+salir
