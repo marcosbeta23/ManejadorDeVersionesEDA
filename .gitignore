@@ -1,10 +1,30 @@
-# Archivos compilados
+# ============================================
+# ARCHIVOS COMPILADOS Y EJECUTABLES
+# ============================================
 *.o
 *.out
 *.exe
 main
 
-# Archivos temporales del sistema
+# Ejecutables de tests de Fase 2
+test_parser
+test_navegacion
+test_validaciones
+test_desplazamiento
+test_crearversion
+test_debug*
+
+# ============================================
+# ARCHIVOS DE DEPURACIÓN Y LOGS
+# ============================================
+valgrind-out.txt
+valgrind_output.txt
+valgrind_*.log
+*.log
+
+# ============================================
+# ARCHIVOS TEMPORALES DEL SISTEMA
+# ============================================
 .DS_Store
 Thumbs.db
 *.swp
@@ -12,32 +32,30 @@ Thumbs.db
 *~
 *.tmp
 .tmp
+tests/.tmp
 
-# Archivos de IDE
+# ============================================
+# ARCHIVOS DE IDE
+# ============================================
 .vscode/
 .idea/
 *.code-workspace
 
-# Archivos de depuración
-valgrind-out.txt
-valgrind_output.txt
-
-# Archivos de documentación temporal/personal
-BUG_BUCLE_SOLUCION.md
-TESTS_ARREGLADOS.md
-SOLUCION_FINAL_TESTS.md
-
-# Archivos de planificación (no necesarios para entrega)
+# ============================================
+# ARCHIVOS DE PLANIFICACIÓN (NO PARA ENTREGA)
+# ============================================
 plan_solo_fase2_eda.md
 PLAN_FASE1_ORGANIZACION.md
 PLAN_FASE2_ORGANIZACION.md
 fase1.md
 organizacion_equipo_eda.md
 guia_obligatorio_eda.md
+BUG_BUCLE_SOLUCION.md
+TESTS_ARREGLADOS.md
+SOLUCION_FINAL_TESTS.md
 
-# Ejecutables de tests
-test_parser
-test_navegacion
-
-# Scripts de conversión temporales
+# ============================================
+# SCRIPTS TEMPORALES
+# ============================================
 convert_to_unix.sh
+test_rapido.sh
