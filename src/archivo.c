@@ -11,6 +11,11 @@
 
 using namespace std;
 
+struct nodo_archivo {
+    char* nombre;
+    Version primeraVersion;
+};
+
 // Crea el archivo con el nombre especificado y lo inicializa sin contenido (vacío).
 Archivo CrearArchivo(char * nombre){
 	if (nombre == nullptr || strlen(nombre) == 0) {
@@ -35,7 +40,7 @@ TipoRet BorrarArchivo(Archivo &a){
 	
 	delete[] a->nombre;
 	delete a;
-	a = nullptr;
+	a = NULL;
 	
 	return OK;
 }
@@ -338,27 +343,48 @@ TipoRet MostrarTexto(Archivo a, char * version){
 		return ERROR;
 	}
 
-	// Fase 1: versiones de primer nivel
-	int numVersion = atoi(version);
+	// Parsear la versión jerárquica (ej: "1.2.3")
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
 	
-	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
-	
-	if (ver == nullptr) {
+	if (secuencia == nullptr) {
 		return ERROR;
 	}
-
+	
+	// Navegar al nodo de la versión
+	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
+	
+	if (ver == nullptr) {
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// Obtener camino de ancestros (raíz → versión objetivo)
+	Version camino[100];  // Máximo 100 niveles de profundidad
+	int longitudCamino = 0;
+	obtenerCaminoAncestros(ver, camino, &longitudCamino);
+	
+	// Crear texto vacío
 	ListaLineas texto = crearListaLineas();
-	aplicarModificaciones(texto, ver->primeraModificacion);
 	
-	cout << "Archivo: " << a->nombre << " - Version " << numVersion << endl << endl;
+	// Aplicar modificaciones de todos los ancestros en orden (raíz → hoja)
+	for (int i = 0; i < longitudCamino; i++) {
+		aplicarModificaciones(texto, camino[i]->primeraModificacion);
+	}
 	
-	if (texto == nullptr) {
+	// Mostrar el texto reconstruido
+	cout << "Archivo: " << a->nombre << " - Version " << version << endl << endl;
+	
+	if (texto == nullptr || contarLineas(texto) == 0) {
 		cout << "(versión sin líneas)" << endl;
 	} else {
 		imprimirListaLineas(texto);
 	}
 	
+	// Liberar memoria
 	liberarListaLineas(texto);
+	liberarArrayVersion(secuencia);
 	
 	return OK;
 }

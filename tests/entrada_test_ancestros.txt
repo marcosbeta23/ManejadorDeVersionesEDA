@@ -1,0 +1,15 @@
+miarchivo
+CrearVersion(1)
+InsertarLinea(1, Linea de version 1, 1)
+MostrarTexto(1)
+CrearVersion(1.1)
+InsertarLinea(1.1, Linea de version 1.1, 2)
+MostrarTexto(1.1)
+CrearVersion(1.1.1)
+InsertarLinea(1.1.1, Linea de version 1.1.1, 3)
+MostrarTexto(1.1.1)
+CrearVersion(2)
+InsertarLinea(2, Linea independiente de version 2, 1)
+MostrarTexto(2)
+MostrarVersiones()
+salir

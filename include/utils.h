@@ -15,7 +15,6 @@ char* copiarString(const char* str);
 // Libera un string y asigna NULL al puntero
 void liberarString(char*& str);
 
-
 // Estructura para reconstruir el texto aplicando modificaciones
 struct nodo_linea {
     char* texto;
@@ -53,7 +52,6 @@ Version buscarVersionEnLista(Version lista, int numero);
 // Agrega una modificación al final de la lista
 void agregarModificacion(Version ver, Modificacion mod);
 
-
 // Parsea un string de versión (ej: "1.2.3") y retorna un array de enteros
 int* parsearVersion(const char* version, int* longitud);
 
@@ -66,6 +64,9 @@ Version buscarHijo(Version padre, int numero);
 
 // Navega el árbol siguiendo una secuencia de números
 Version navegarAVersion(Version primeraVersion, int* secuencia, int longitud);
+
+// Construye un camino desde la versión hasta la raíz (en orden inverso)
+void obtenerCaminoAncestros(Version v, Version* camino, int* longitud);
 
 
 // Valida que el padre de una versión existe

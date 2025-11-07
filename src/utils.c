@@ -298,6 +298,31 @@ Version navegarAVersion(Version primeraVersion, int* secuencia, int longitud) {
     return actual;
 }
 
+// Construye un camino desde la versión hasta la raíz (en orden inverso: hoja→raíz)
+void obtenerCaminoAncestros(Version v, Version* camino, int* longitud) {
+    if (v == nullptr || camino == nullptr || longitud == nullptr) {
+        if (longitud != nullptr) *longitud = 0;
+        return;
+    }
+    
+    *longitud = 0;
+    Version actual = v;
+    
+    // Subir desde la versión hasta la raíz siguiendo punteros padre
+    while (actual != nullptr) {
+        camino[*longitud] = actual;
+        (*longitud)++;
+        actual = actual->padre;
+    }
+    
+    // Invertir el camino para que quede raíz→hoja
+    for (int i = 0; i < *longitud / 2; i++) {
+        Version temp = camino[i];
+        camino[i] = camino[*longitud - 1 - i];
+        camino[*longitud - 1 - i] = temp;
+    }
+}
+
 // Valida que el padre de una versión existe en el árbol
 bool validarPadreExiste(Version primeraVersion, int* secuencia, int longitud) {
     if (secuencia == nullptr || longitud <= 0) return false;
@@ -364,7 +389,7 @@ void renumerarSubarbol(Version raiz, int delta) {
     }
     
     raiz->numero += delta;
-    // Los hijos mantienen su numeración relativa: 2.1 → 3.1
+    // Los hijos mantienen su numeración: 2.1 → 3.1
 }
 
 // Desplaza y renumera versiones hermanas desde numeroInicio en adelante

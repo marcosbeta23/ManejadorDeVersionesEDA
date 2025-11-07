@@ -18,7 +18,7 @@ cd testscd tests
 
 bash test_crearversion.shbash test_crearversion.sh
 
-``````
+``
 
 
 
@@ -66,7 +66,9 @@ Archivo de entrada para demostrar CrearVersion + MostrarVersiones.- Validaciones
 
 ```bash
 
-make## Archivos
+make
+
+## Archivos
 
 cat tests/entrada_completa.txt | ./main 2>&1 | grep -E "Archivo:|^[0-9]|OK"
 
