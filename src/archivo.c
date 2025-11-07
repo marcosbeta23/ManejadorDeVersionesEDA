@@ -233,45 +233,47 @@ TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nro
 		return ERROR;
 	}
 	
-	// Fase 1: versiones de primer nivel
-	int numVersion = atoi(version);
+	// Parsear la versión jerárquica
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
 	
-	if (numVersion <= 0) {
-		strcpy(error, "Version invalida (debe ser numero positivo)");
+	if (secuencia == nullptr) {
+		strcpy(error, "Version invalida");
 		return ERROR;
 	}
 	
-	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
+	// Navegar al nodo de la versión
+	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	// Si no existe, crearla
 	if (ver == nullptr) {
-		ver = crearVersion(numVersion);
-		
-		// Agregar a la lista de versiones del archivo
-		if (a->primeraVersion == nullptr) {
-			a->primeraVersion = ver;
-		} else {
-			Version actual = a->primeraVersion;
-			while (actual->siguienteHermano != nullptr) {
-				actual = actual->siguienteHermano;
-			}
-			actual->siguienteHermano = ver;
-		}
+		liberarArrayVersion(secuencia);
+		strcpy(error, "Version no existe");
+		return ERROR;
 	}
 	
-	// Validar rango de línea
+	// Validar rango de línea - necesitamos el texto CON ancestros
+	Version camino[100];
+	int longitudCamino = 0;
+	obtenerCaminoAncestros(ver, camino, &longitudCamino);
+	
 	ListaLineas texto = crearListaLineas();
-	aplicarModificaciones(texto, ver->primeraModificacion);
+	for (int i = 0; i < longitudCamino; i++) {
+		aplicarModificaciones(texto, camino[i]->primeraModificacion);
+	}
+	
 	unsigned int numLineas = contarLineas(texto);
 	
 	// nroLinea debe estar entre 1 y numLineas+1
 	if (nroLinea > numLineas + 1) {
 		liberarListaLineas(texto);
+		liberarArrayVersion(secuencia);
 		strcpy(error, "Numero de linea fuera de rango (muy grande)");
 		return ERROR;
 	}
 	
 	liberarListaLineas(texto);
+	liberarArrayVersion(secuencia);
 	
 	Modificacion mod = crearModificacion(INSERCION, nroLinea, linea);
 	agregarModificacion(ver, mod);
@@ -296,40 +298,53 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 		return ERROR;
 	}
 	
-	// fase 1: Solo versiones de primer nivel
-	// Parsear número de versión
-	int numVersion = atoi(version);
+	// Parsear la versión jerárquica
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
 	
-	if (numVersion <= 0) {
-		strcpy(error, "Version invalida (debe ser numero positivo)");
+	if (secuencia == nullptr) {
+		strcpy(error, "Version invalida");
 		return ERROR;
 	}
 	
-	Version ver = buscarVersionEnLista(a->primeraVersion, numVersion);
+	// Navegar al nodo de la versión
+	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
 	if (ver == nullptr) {
+		liberarArrayVersion(secuencia);
 		strcpy(error, "Version no existe");
 		return ERROR;
 	}
 	
-	// Validar rango
+	// Validar rango - necesitamos el texto CON ancestros
+	Version camino[100];
+	int longitudCamino = 0;
+	obtenerCaminoAncestros(ver, camino, &longitudCamino);
+	
 	ListaLineas texto = crearListaLineas();
-	aplicarModificaciones(texto, ver->primeraModificacion);
+	for (int i = 0; i < longitudCamino; i++) {
+		aplicarModificaciones(texto, camino[i]->primeraModificacion);
+	}
+	
 	unsigned int numLineas = contarLineas(texto);
 	
 	if (numLineas == 0) {
 		liberarListaLineas(texto);
+		liberarArrayVersion(secuencia);
 		strcpy(error, "No hay lineas para borrar (version vacia)");
 		return ERROR;
 	}
 	
 	if (nroLinea > numLineas) {
 		liberarListaLineas(texto);
+		liberarArrayVersion(secuencia);
 		strcpy(error, "Numero de linea fuera de rango (no existe)");
 		return ERROR;
 	}
 	
 	liberarListaLineas(texto);
+	liberarArrayVersion(secuencia);
 	
 	Modificacion mod = crearModificacion(BORRADO, nroLinea, nullptr);
 	agregarModificacion(ver, mod);
@@ -391,7 +406,53 @@ TipoRet MostrarTexto(Archivo a, char * version){
 
 // Esta función muestra los cambios que se realizaron en el texto de la version parámetro, sin incluir los cambios realizados en las versiones ancestras de la cual dicha versión depende.
 TipoRet MostrarCambios(Archivo a, char * version){
-	return NO_IMPLEMENTADA;
+	if (a == nullptr) {
+		return ERROR;
+	}
+	
+	// Parsear la versión jerárquica
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
+	
+	if (secuencia == nullptr) {
+		return ERROR;
+	}
+	
+	// Navegar al nodo de la versión
+	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
+	
+	if (ver == nullptr) {
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// Mostrar encabezado
+	cout << "Cambios de la version " << version << ":\n\n";
+	
+	// Verificar si hay modificaciones
+	if (ver->primeraModificacion == nullptr) {
+		cout << "(sin modificaciones propias)\n";
+		liberarArrayVersion(secuencia);
+		return OK;
+	}
+	
+	// Recorrer SOLO las modificaciones de esta versión (NO ancestros)
+	Modificacion actual = ver->primeraModificacion;
+	while (actual != nullptr) {
+		if (actual->tipo == INSERCION) {
+			cout << "INSERCION(" << actual->nroLinea << ", \"" 
+			     << actual->textoLinea << "\")\n";
+		} else {  // BORRADO
+			cout << "BORRADO(" << actual->nroLinea << ")\n";
+		}
+		actual = actual->siguiente;
+	}
+	
+	// Liberar memoria
+	liberarArrayVersion(secuencia);
+	
+	return OK;
 }
 
 // Esta función asigna al parámetro booleano (iguales) el valor true si ambas versiones (version1 y version2) del archivo tienen exactamente el mismo texto, y false en caso contrario.
