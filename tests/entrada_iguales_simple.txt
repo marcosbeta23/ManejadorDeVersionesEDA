@@ -1,0 +1,7 @@
+test
+CrearVersion(1)
+InsertarLinea(1, Linea 1, 1)
+CrearVersion(2)
+InsertarLinea(2, Linea 1, 1)
+Iguales(1, 2)
+salir

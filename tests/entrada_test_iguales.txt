@@ -1,0 +1,15 @@
+test
+CrearVersion(1)
+InsertarLinea(1, Linea A, 1)
+InsertarLinea(1, Linea B, 2)
+CrearVersion(2)
+InsertarLinea(2, Linea C, 3)
+CrearVersion(3)
+InsertarLinea(3, Linea C, 3)
+MostrarTexto(1)
+MostrarTexto(2)
+MostrarTexto(3)
+Iguales(2, 3)
+Iguales(1, 2)
+Iguales(1, 3)
+salir

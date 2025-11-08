@@ -548,7 +548,176 @@ TipoRet MostrarCambios(Archivo a, char * version){
 
 // Esta función asigna al parámetro booleano (iguales) el valor true si ambas versiones (version1 y version2) del archivo tienen exactamente el mismo texto, y false en caso contrario.
 TipoRet Iguales(Archivo a, char * version1, char * version2, bool &iguales){
-	return NO_IMPLEMENTADA;
+    // Validaciones iniciales
+    if (a == NULL || version1 == NULL || version2 == NULL) {
+        return ERROR;
+    }
+    
+    // 1. Parsear y navegar a la primera versión
+    int longitud1 = 0;
+    int* secuencia1 = parsearVersion(version1, &longitud1);
+    if (secuencia1 == NULL) {
+        return ERROR;
+    }
+    
+    Version v1 = navegarAVersion(a->primeraVersion, secuencia1, longitud1);
+    if (v1 == NULL) {
+        liberarArrayVersion(secuencia1);
+        return ERROR;
+    }
+    
+    // 2. Parsear y navegar a la segunda versión
+    int longitud2 = 0;
+    int* secuencia2 = parsearVersion(version2, &longitud2);
+    if (secuencia2 == NULL) {
+        liberarArrayVersion(secuencia1);
+        return ERROR;
+    }
+    
+    Version v2 = navegarAVersion(a->primeraVersion, secuencia2, longitud2);
+    if (v2 == NULL) {
+        liberarArrayVersion(secuencia1);
+        liberarArrayVersion(secuencia2);
+        return ERROR;
+    }
+    
+    // 3. Obtener camino de ancestros para v1
+    int longitudCamino1 = 0;
+    Version* camino1 = new Version[100];
+    obtenerCaminoAncestros(v1, camino1, &longitudCamino1);
+    
+    // 4. Obtener camino de ancestros para v2
+    int longitudCamino2 = 0;
+    Version* camino2 = new Version[100];
+    obtenerCaminoAncestros(v2, camino2, &longitudCamino2);
+    
+    // 5. Reconstruir textos usando arrays dinámicos simples
+    // Usaremos arrays de strings para evitar complejidad con listas enlazadas
+    const int MAX_LINEAS = 1000;
+    char** texto1 = new char*[MAX_LINEAS];
+    int cantLineas1 = 0;
+    for (int i = 0; i < MAX_LINEAS; i++) texto1[i] = NULL;
+    
+    char** texto2 = new char*[MAX_LINEAS];
+    int cantLineas2 = 0;
+    for (int i = 0; i < MAX_LINEAS; i++) texto2[i] = NULL;
+    
+    // Aplicar modificaciones de ancestros de v1
+    for (int i = 0; i < longitudCamino1; i++) {
+        Version ancestro = camino1[i];
+        Modificacion mod = ancestro->primeraModificacion;
+        
+        while (mod != NULL) {
+            if (mod->tipo == INSERCION) {
+                // Inserción: desplazar líneas hacia abajo e insertar
+                unsigned int pos = mod->nroLinea;
+                if (pos >= 1 && pos <= (unsigned int)(cantLineas1 + 1) && cantLineas1 < MAX_LINEAS) {
+                    // Desplazar hacia abajo
+                    for (int j = cantLineas1; j >= (int)pos; j--) {
+                        texto1[j] = texto1[j-1];
+                    }
+                    // Insertar nueva línea
+                    if (mod->textoLinea != NULL) {
+                        texto1[pos-1] = new char[strlen(mod->textoLinea) + 1];
+                        strcpy(texto1[pos-1], mod->textoLinea);
+                    } else {
+                        texto1[pos-1] = new char[1];
+                        texto1[pos-1][0] = '\0';
+                    }
+                    cantLineas1++;
+                }
+            } else {
+                // Borrado: eliminar línea y desplazar hacia arriba
+                unsigned int pos = mod->nroLinea;
+                if (pos >= 1 && pos <= (unsigned int)cantLineas1) {
+                    if (texto1[pos-1] != NULL) {
+                        delete[] texto1[pos-1];
+                    }
+                    // Desplazar hacia arriba
+                    for (int j = pos-1; j < cantLineas1-1; j++) {
+                        texto1[j] = texto1[j+1];
+                    }
+                    texto1[cantLineas1-1] = NULL;
+                    cantLineas1--;
+                }
+            }
+            mod = mod->siguiente;
+        }
+    }
+    
+    // Aplicar modificaciones de ancestros de v2
+    for (int i = 0; i < longitudCamino2; i++) {
+        Version ancestro = camino2[i];
+        Modificacion mod = ancestro->primeraModificacion;
+        
+        while (mod != NULL) {
+            if (mod->tipo == INSERCION) {
+                unsigned int pos = mod->nroLinea;
+                if (pos >= 1 && pos <= (unsigned int)(cantLineas2 + 1) && cantLineas2 < MAX_LINEAS) {
+                    for (int j = cantLineas2; j >= (int)pos; j--) {
+                        texto2[j] = texto2[j-1];
+                    }
+                    if (mod->textoLinea != NULL) {
+                        texto2[pos-1] = new char[strlen(mod->textoLinea) + 1];
+                        strcpy(texto2[pos-1], mod->textoLinea);
+                    } else {
+                        texto2[pos-1] = new char[1];
+                        texto2[pos-1][0] = '\0';
+                    }
+                    cantLineas2++;
+                }
+            } else {
+                unsigned int pos = mod->nroLinea;
+                if (pos >= 1 && pos <= (unsigned int)cantLineas2) {
+                    if (texto2[pos-1] != NULL) {
+                        delete[] texto2[pos-1];
+                    }
+                    for (int j = pos-1; j < cantLineas2-1; j++) {
+                        texto2[j] = texto2[j+1];
+                    }
+                    texto2[cantLineas2-1] = NULL;
+                    cantLineas2--;
+                }
+            }
+            mod = mod->siguiente;
+        }
+    }
+    
+    // 6. Comparar
+    if (cantLineas1 != cantLineas2) {
+        iguales = false;
+    } else {
+        iguales = true;
+        for (int i = 0; i < cantLineas1 && iguales; i++) {
+            if (texto1[i] == NULL || texto2[i] == NULL) {
+                iguales = false;
+            } else if (strcmp(texto1[i], texto2[i]) != 0) {
+                iguales = false;
+            }
+        }
+    }
+    
+    // 7. Liberar memoria
+    for (int i = 0; i < cantLineas1; i++) {
+        if (texto1[i] != NULL) {
+            delete[] texto1[i];
+        }
+    }
+    delete[] texto1;
+    
+    for (int i = 0; i < cantLineas2; i++) {
+        if (texto2[i] != NULL) {
+            delete[] texto2[i];
+        }
+    }
+    delete[] texto2;
+    
+    delete[] camino1;
+    delete[] camino2;
+    liberarArrayVersion(secuencia1);
+    liberarArrayVersion(secuencia2);
+    
+    return OK;
 }
 
 // Esta función crea una nueva versión al final del primer nivel con todos los cambios de la version especificada y de sus versiones ancestras. La versión que se crea debe ser independiente de cualquier otra versión.
