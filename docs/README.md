@@ -102,14 +102,17 @@ Para reconstruir el texto se aplican todas las modificaciones en orden.
 
 ## 💾 Gestión de Memoria
 
-Todas las operaciones liberan correctamente la memoria asignada.
-El proyecto ha sido validado sin memory leaks.
+Se usa `valgrind` para verificar que no hay memory leaks:
+```bash
+valgrind --leak-check=full ./main
+```
 
 ## 📚 Recursos
 
 - **Repositorio:** [GitHub - ManejadorDeVersionesEDA](https://github.com/marcosbeta23/ManejadorDeVersionesEDA)
 
 ---
+
 
 
 
