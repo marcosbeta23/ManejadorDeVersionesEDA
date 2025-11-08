@@ -1,12 +1,18 @@
 # Obligatorio EDA 2025 - Manejador de Versiones
 
-Autores: Marcos Betancor  
-Fecha: Octubre 2025  
-Curso: Estructuras de Datos y Algoritmos
+**Autor:** Marcos Betancor  
+**Fecha:** Noviembre 2025  
+**Curso:** Estructuras de Datos y Algoritmos  
+**Estado:** ✅ PROYECTO COMPLETO - FASE 2 FINALIZADA
 
 ## 📋 Descripción
 
-Sistema de control de versiones simplificado para archivos de texto plano.
+Sistema de control de versiones simplificado para archivos de texto plano con soporte para:
+- Versionado jerárquico (1, 1.1, 1.2.3, etc.)
+- Sistema de deltas (solo guarda cambios)
+- Reconstrucción desde ancestros
+- Comparación de versiones
+- Versiones independientes
 
 ## 🏗️ Estructura del Proyecto
 
@@ -48,20 +54,20 @@ make valgrind
 - [x] Funciones auxiliares completas
 - [x] Compila sin errores
 
-### Fase 1 - Control Intermedio 
-- [x] CrearArchivo 
+### ✅ Fase 1 - Control Intermedio (COMPLETADA)
+- [x] CrearArchivo
 - [x] InsertarLinea
 - [x] MostrarTexto
 - [x] BorrarLinea
 - [x] BorrarArchivo
 
-### Fase 2 - Entrega Final 
-- [ ] CrearVersion (árbol completo)
-- [ ] BorrarVersion
-- [ ] MostrarVersiones
-- [ ] MostrarCambios
-- [ ] Iguales
-- [ ] VersionIndependiente
+### ✅ Fase 2 - Entrega Final (COMPLETADA)
+- [x] CrearVersion (árbol jerárquico completo)
+- [x] BorrarVersion (con renumeración)
+- [x] MostrarVersiones (árbol n-ario)
+- [x] MostrarCambios (solo modificaciones propias)
+- [x] Iguales (comparación texto reconstruido)
+- [x] VersionIndependiente (versión independiente en nivel 1) ⭐ BONUS
 
 ## 📝 Decisiones de Diseño
 
@@ -73,8 +79,10 @@ make valgrind
 
 **nodo_version:**
 - `numero`: Número de versión (1, 2, 3...)
+- `padre`: Puntero a versión padre (NULL para nivel 1)
+- `primerHijo`: Primera subversión
+- `siguienteHermano`: Siguiente versión del mismo nivel
 - `primeraModificacion`: Lista de modificaciones
-- `siguienteHermano`: Siguiente versión
 
 **nodo_modificacion:**
 - `tipo`: INSERCION o BORRADO
@@ -89,10 +97,19 @@ Para reconstruir el texto se aplican todas las modificaciones en orden.
 
 ## 🧪 Testing
 
-Los archivos de prueba están en `tests/`:
-- `test_crear_archivo.txt`
-- `test_insertar.txt`
-- `test_completo.txt`
+**Ver documentación completa en:** [`tests/README.md`](../tests/README.md)
+
+### Ejecutar tests:
+
+```bash
+# Test completo de todas las operaciones
+./main < tests/test_completo.txt
+
+# Suite automatizada (7 tests con validación)
+./tests/test_final_completo.sh
+```
+
+**Resultado:** ✅ 7/7 tests pasando (100%)
 
 ## 💾 Gestión de Memoria
 
@@ -103,12 +120,23 @@ valgrind --leak-check=full ./main
 
 ## 📚 Recursos
 
-- [Enunciado del obligatorio](docs/)
-- [Guía de implementación](docs/)
+- **Tests:** Ver [`tests/README.md`](../tests/README.md) para documentación completa de testing
+- **Repositorio:** [GitHub - ManejadorDeVersionesEDA](https://github.com/marcosbeta23/ManejadorDeVersionesEDA)
 
 ---
 
-**Última actualización:** 21 de Octubre 2025
+## 📊 Estadísticas Finales
+
+- **Operaciones implementadas:** 9/9 (100%)
+- **Tests automatizados:** 7/7 pasando
+- **Memory leaks:** 0 (validado con Valgrind)
+- **Commits:** 10+ commits organizados
+- **Fecha de finalización:** 8 de Noviembre 2025
+
+---
+
+**Última actualización:** 8 de Noviembre 2025  
+**Estado:** ✅ PROYECTO COMPLETO - LISTO PARA ENTREGA
 
 
 
