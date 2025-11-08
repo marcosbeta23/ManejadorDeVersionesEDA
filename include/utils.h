@@ -82,4 +82,7 @@ void renumerarSubarbol(Version raiz, int delta);
 // Desplaza y renumera versiones hermanas desde una posición
 void desplazarYRenumerar(Version padre, Version& primeraVersion, int numeroInicio, int delta);
 
+// Renumera hermanos posteriores al decrementar (para BorrarVersion)
+void renumerarHermanosPosteriores(Version primerHermano, int delta);
+
 #endif // UTILS_H

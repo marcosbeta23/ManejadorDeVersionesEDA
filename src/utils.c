@@ -388,8 +388,15 @@ void renumerarSubarbol(Version raiz, int delta) {
         return;
     }
     
+    // 1. Renumerar este nodo
     raiz->numero += delta;
-    // Los hijos mantienen su numeración: 2.1 → 3.1
+    
+    // 2. Renumerar RECURSIVAMENTE todos los hijos
+    Version hijo = raiz->primerHijo;
+    while (hijo != nullptr) {
+        renumerarSubarbol(hijo, delta);
+        hijo = hijo->siguienteHermano;
+    }
 }
 
 // Desplaza y renumera versiones hermanas desde numeroInicio en adelante
@@ -407,6 +414,19 @@ void desplazarYRenumerar(Version padre, Version& primeraVersion, int numeroInici
             renumerarSubarbol(actual, delta);
         }
         
+        actual = actual->siguienteHermano;
+    }
+}
+
+// Renumera todos los hermanos posteriores aplicando un delta
+// Usado en BorrarVersion para decrementar números después de eliminar un nodo
+// IMPORTANTE: Solo renumera el nodo mismo, NO sus hijos (los hijos mantienen su numeración relativa)
+void renumerarHermanosPosteriores(Version primerHermano, int delta) {
+    Version actual = primerHermano;
+    
+    while (actual != nullptr) {
+        // Solo renumerar el nodo actual, no sus hijos
+        actual->numero += delta;
         actual = actual->siguienteHermano;
     }
 }
