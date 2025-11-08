@@ -30,7 +30,7 @@ MostrarVersiones()
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_1.txt 2>&1 | grep -E "^[0-9]")
+OUTPUT=$(../main < /tmp/test_final_1.txt 2>&1 | grep -E "^[0-9]")
 if echo "$OUTPUT" | grep -q "^1$" && echo "$OUTPUT" | grep -q "^1.1$" && echo "$OUTPUT" | grep -q "^2.1$"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
@@ -53,7 +53,7 @@ MostrarTexto(1)
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_2.txt 2>&1 | grep -E "^[0-9]\.")
+OUTPUT=$(../main < /tmp/test_final_2.txt 2>&1 | grep -E "^[0-9]\.")
 if echo "$OUTPUT" | grep -q "Primera" && echo "$OUTPUT" | grep -q "Segunda" && echo "$OUTPUT" | grep -q "Tercera"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
@@ -77,7 +77,7 @@ MostrarTexto(1)
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_3.txt 2>&1 | grep -E "^[0-9]\.")
+OUTPUT=$(../main < /tmp/test_final_3.txt 2>&1 | grep -E "^[0-9]\.")
 if echo "$OUTPUT" | grep -q "A" && echo "$OUTPUT" | grep -q "C" && ! echo "$OUTPUT" | grep -q "B"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
@@ -100,7 +100,7 @@ MostrarCambios(1.1)
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_4.txt 2>&1)
+OUTPUT=$(../main < /tmp/test_final_4.txt 2>&1)
 if echo "$OUTPUT" | grep -q "INSERCION(2" && echo "$OUTPUT" | grep -q "Nueva"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
@@ -123,7 +123,7 @@ MostrarVersiones()
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_5.txt 2>&1 | grep -E "^[0-9]$")
+OUTPUT=$(../main < /tmp/test_final_5.txt 2>&1 | grep -E "^[0-9]$")
 LINES=$(echo "$OUTPUT" | wc -l)
 if [ "$LINES" -eq 2 ] && echo "$OUTPUT" | grep -q "^1$" && echo "$OUTPUT" | grep -q "^2$"; then
     echo -e "${GREEN}✅ PASSED${NC}"
@@ -149,7 +149,7 @@ Iguales(1, 2)
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_6.txt 2>&1)
+OUTPUT=$(../main < /tmp/test_final_6.txt 2>&1)
 if echo "$OUTPUT" | grep -q "iguales"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
@@ -174,7 +174,7 @@ Iguales(1.1, 2)
 salir
 EOF
 
-OUTPUT=$(./main < /tmp/test_final_7.txt 2>&1)
+OUTPUT=$(../main < /tmp/test_final_7.txt 2>&1)
 if echo "$OUTPUT" | grep -q "^2$" && echo "$OUTPUT" | grep -q "iguales"; then
     echo -e "${GREEN}✅ PASSED${NC}"
     ((PASSED++))
