@@ -1,4 +1,4 @@
-# Obligatorio EDA 2025 - Manejador de Versiones
+# Manejador de Versiones
 
 **Autor:** Marcos Betancor  
 **Fecha:** Noviembre 2025  
@@ -112,6 +112,7 @@ valgrind --leak-check=full ./main
 - **Repositorio:** [GitHub - ManejadorDeVersionesEDA](https://github.com/marcosbeta23/ManejadorDeVersionesEDA)
 
 ---
+
 
 
 
