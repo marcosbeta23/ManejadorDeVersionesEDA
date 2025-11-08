@@ -164,7 +164,98 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 
 // Elimina una versión del archivo si la version pasada por parámetro existe. En otro caso la operación quedará sin efecto.
 TipoRet BorrarVersion(Archivo &a, char * version){
-	return NO_IMPLEMENTADA;
+	if (a == nullptr || version == nullptr) {
+		return ERROR;
+	}
+	
+	// 1. Parsear la versión
+	int* secuencia = nullptr;
+	int longitud = 0;
+	secuencia = parsearVersion(version, &longitud);
+	
+	if (secuencia == nullptr) {
+		return ERROR;
+	}
+	
+	// 2. Caso especial: Única versión "1"
+	if (longitud == 1 && secuencia[0] == 1) {
+		// Verificar si es la única versión
+		if (a->primeraVersion != nullptr && 
+		    a->primeraVersion->numero == 1 && 
+		    a->primeraVersion->siguienteHermano == nullptr) {
+			// Es la única versión, liberar todo y dejar archivo vacío
+			liberarArbolVersiones(a->primeraVersion);
+			a->primeraVersion = nullptr;
+			liberarArrayVersion(secuencia);
+			return OK;
+		}
+	}
+	
+	// 3. Navegar a la versión a borrar
+	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
+	
+	if (ver == nullptr) {
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// 4. Encontrar padre y hermano anterior
+	Version padre = ver->padre;
+	Version hermanoAnterior = nullptr;
+	Version hermanoSiguiente = ver->siguienteHermano;
+	
+	// Buscar hermano anterior
+	if (padre != nullptr) {
+		// No es de primer nivel, buscar en hijos del padre
+		Version actual = padre->primerHijo;
+		while (actual != nullptr && actual->siguienteHermano != ver) {
+			actual = actual->siguienteHermano;
+		}
+		hermanoAnterior = actual;
+	} else {
+		// Es de primer nivel, buscar en primeraVersion
+		if (a->primeraVersion == ver) {
+			// Es el primero, no hay hermano anterior
+			hermanoAnterior = nullptr;
+		} else {
+			Version actual = a->primeraVersion;
+			while (actual != nullptr && actual->siguienteHermano != ver) {
+				actual = actual->siguienteHermano;
+			}
+			hermanoAnterior = actual;
+		}
+	}
+	
+	// 5. Actualizar punteros
+	if (hermanoAnterior != nullptr) {
+		// Hay hermano anterior, actualizar su siguiente
+		hermanoAnterior->siguienteHermano = hermanoSiguiente;
+	} else {
+		// No hay hermano anterior, es el primero
+		if (padre != nullptr) {
+			// Actualizar primerHijo del padre
+			padre->primerHijo = hermanoSiguiente;
+		} else {
+			// Actualizar primeraVersion del archivo
+			a->primeraVersion = hermanoSiguiente;
+		}
+	}
+	
+	// 6. Desconectar el nodo antes de liberar
+	ver->siguienteHermano = nullptr;
+	
+	// 7. Liberar el nodo y sus hijos (NO hermanos porque ya los desconectamos)
+	liberarArbolVersiones(ver);
+	
+	// 8. Renumerar hermanos posteriores (decrementar en 1)
+	if (hermanoSiguiente != nullptr) {
+		renumerarHermanosPosteriores(hermanoSiguiente, -1);
+	}
+	
+	// 9. Liberar memoria del parser
+	liberarArrayVersion(secuencia);
+	
+	return OK;
 }
 
 // Función auxiliar recursiva para mostrar el árbol con indentación
