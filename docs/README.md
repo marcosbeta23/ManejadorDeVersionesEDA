@@ -2,8 +2,7 @@
 
 **Autor:** Marcos Betancor  
 **Fecha:** Noviembre 2025  
-**Curso:** Estructuras de Datos y Algoritmos  
-**Estado:** ✅ PROYECTO COMPLETO - FASE 2 FINALIZADA
+**Curso:** Estructuras de Datos y Algoritmos
 
 ## 📋 Descripción
 
@@ -23,7 +22,6 @@ eda-ob2025/
 ├── tests/         # Archivos de prueba
 ├── docs/          # Documentación
 ├── Makefile       # Sistema de compilación
-└── README.md      # Este archivo
 ```
 
 ## 🔧 Compilación
@@ -67,7 +65,7 @@ make valgrind
 - [x] MostrarVersiones (árbol n-ario)
 - [x] MostrarCambios (solo modificaciones propias)
 - [x] Iguales (comparación texto reconstruido)
-- [x] VersionIndependiente (versión independiente en nivel 1) ⭐ BONUS
+- [x] VersionIndependiente (versión independiente en nivel 1)
 
 ## 📝 Decisiones de Diseño
 
@@ -97,19 +95,13 @@ Para reconstruir el texto se aplican todas las modificaciones en orden.
 
 ## 🧪 Testing
 
-**Ver documentación completa en:** [`tests/README.md`](../tests/README.md)
-
 ### Ejecutar tests:
 
 ```bash
 # Test completo de todas las operaciones
 ./main < tests/test_completo.txt
 
-# Suite automatizada (7 tests con validación)
-./tests/test_final_completo.sh
 ```
-
-**Resultado:** ✅ 7/7 tests pasando (100%)
 
 ## 💾 Gestión de Memoria
 
@@ -120,23 +112,9 @@ valgrind --leak-check=full ./main
 
 ## 📚 Recursos
 
-- **Tests:** Ver [`tests/README.md`](../tests/README.md) para documentación completa de testing
 - **Repositorio:** [GitHub - ManejadorDeVersionesEDA](https://github.com/marcosbeta23/ManejadorDeVersionesEDA)
 
 ---
-
-## 📊 Estadísticas Finales
-
-- **Operaciones implementadas:** 9/9 (100%)
-- **Tests automatizados:** 7/7 pasando
-- **Memory leaks:** 0 (validado con Valgrind)
-- **Commits:** 10+ commits organizados
-- **Fecha de finalización:** 8 de Noviembre 2025
-
----
-
-**Última actualización:** 8 de Noviembre 2025  
-**Estado:** ✅ PROYECTO COMPLETO - LISTO PARA ENTREGA
 
 
 
