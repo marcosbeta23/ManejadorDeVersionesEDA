@@ -17,34 +17,34 @@ Modificacion crearModificacion(TipoMod tipo, unsigned int nroLinea, const char* 
     mod->nroLinea = nroLinea;
     
     // Solo guardamos texto si es INSERCION
-    if (tipo == INSERCION && texto != nullptr) {
+    if (tipo == INSERCION && texto != NULL) {
         mod->textoLinea = new char[strlen(texto) + 1];
         strcpy(mod->textoLinea, texto);
     } else {
-        mod->textoLinea = nullptr;
+        mod->textoLinea = NULL;
     }
     
-    mod->siguiente = nullptr;
+    mod->siguiente = NULL;
     return mod;
 }
 
 // Libera una modificación individual
 void liberarModificacion(Modificacion& mod) {
-    if (mod == nullptr) return;
+    if (mod == NULL) return;
     
     // Liberar texto si existe
-    if (mod->textoLinea != nullptr) {
+    if (mod->textoLinea != NULL) {
         delete[] mod->textoLinea;
-        mod->textoLinea = nullptr;
+        mod->textoLinea = NULL;
     }
     
     delete mod;
-    mod = nullptr;
+    mod = NULL;
 }
 
 // Libera toda una lista de modificaciones
 void liberarListaModificaciones(Modificacion& lista) {
-    while (lista != nullptr) {
+    while (lista != NULL) {
         Modificacion temp = lista;
         lista = lista->siguiente;
         liberarModificacion(temp);

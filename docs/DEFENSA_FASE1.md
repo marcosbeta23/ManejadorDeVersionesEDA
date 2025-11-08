@@ -55,7 +55,7 @@ Archivo CrearArchivo(char * nombre) {
     Archivo a = new nodo_archivo;
     a->nombre = new char[strlen(nombre) + 1];
     strcpy(a->nombre, nombre);
-    a->primeraVersion = nullptr;
+    a->primeraVersion = NULL;
     return a;
 }
 ```
@@ -168,12 +168,12 @@ Para cada versión (hermanos):
 **Implementación:**
 ```c
 TipoRet BorrarArchivo(Archivo &a){
-    if (a == nullptr) return ERROR;
+    if (a == NULL) return ERROR;
     
     liberarArbolVersiones(a->primeraVersion);  // Recursiva
     delete[] a->nombre;
     delete a;
-    a = nullptr;
+    a = NULL;
     
     return OK;
 }
@@ -267,13 +267,13 @@ strcpy(texto, linea);                        // Usar
 
 // LIBERAR (siempre en orden inverso)
 delete[] texto;                              // Liberar
-texto = nullptr;                             // Asegurar
+texto = NULL;                             // Asegurar
 ```
 
 **Liberación recursiva en BorrarArchivo:**
 ```c
 void liberarArbolVersiones(Version& raiz) {
-    if (raiz == nullptr) return;
+    if (raiz == NULL) return;
     
     liberarArbolVersiones(raiz->siguienteHermano);  // Hermanos
     liberarArbolVersiones(raiz->primerHijo);        // Hijos
@@ -291,7 +291,7 @@ void liberarArbolVersiones(Version& raiz) {
 
 ```c
 // Ejemplo: InsertarLinea
-if (a == nullptr) {
+if (a == NULL) {
     strcpy(error, "Archivo no existe");
     return ERROR;
 }

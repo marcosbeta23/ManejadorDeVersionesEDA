@@ -18,20 +18,20 @@ struct nodo_archivo {
 
 // Crea el archivo con el nombre especificado y lo inicializa sin contenido (vacío).
 Archivo CrearArchivo(char * nombre){
-	if (nombre == nullptr || strlen(nombre) == 0) {
-        return nullptr;
+	if (nombre == NULL || strlen(nombre) == 0) {
+        return NULL;
     }
 	Archivo a = new nodo_archivo;
 	a->nombre = new char[strlen(nombre) + 1];
 	strcpy(a->nombre, nombre);
-	a->primeraVersion = nullptr;
+	a->primeraVersion = NULL;
 	
 	return a;
 }
 
 // Elimina toda la memoria utilizada por el archivo y asigna NULL al puntero a.
 TipoRet BorrarArchivo(Archivo &a){
-	if (a == nullptr) {
+	if (a == NULL) {
 		return ERROR;
 	}
 	
@@ -49,22 +49,22 @@ TipoRet BorrarArchivo(Archivo &a){
 // - El padre de la nueva versión a crear ya debe existir.
 // - No pueden quedar "huecos" entre versiones hermanas. 
 TipoRet CrearVersion(Archivo &a, char * version, char * error){
-	if (a == nullptr) {
+	if (a == NULL) {
 		strcpy(error, "Archivo no existe");
 		return ERROR;
 	}
 	
-	if (version == nullptr || strlen(version) == 0) {
+	if (version == NULL || strlen(version) == 0) {
 		strcpy(error, "Version invalida");
 		return ERROR;
 	}
 	
 	// Parsear versión
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		strcpy(error, "Formato de version invalido");
 		return ERROR;
 	}
@@ -79,10 +79,10 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 	int numeroNuevo = secuencia[longitud - 1];
 	
 	// Determinar padre
-	Version padre = nullptr;
+	Version padre = NULL;
 	if (longitud > 1) {
 		padre = navegarAVersion(a->primeraVersion, secuencia, longitud - 1);
-		if (padre == nullptr) {
+		if (padre == NULL) {
 			strcpy(error, "Error al navegar al padre");
 			liberarArrayVersion(secuencia);
 			return ERROR;
@@ -97,16 +97,16 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 	}
 	
 	// Verificar si existe (desplazamiento)
-	Version hermanos = (padre != nullptr) ? padre->primerHijo : a->primeraVersion;
-	Version existente = (padre != nullptr) ? buscarHijo(padre, numeroNuevo) : buscarVersionEnLista(hermanos, numeroNuevo);
+	Version hermanos = (padre != NULL) ? padre->primerHijo : a->primeraVersion;
+	Version existente = (padre != NULL) ? buscarHijo(padre, numeroNuevo) : buscarVersionEnLista(hermanos, numeroNuevo);
 	
-	if (existente != nullptr) {
+	if (existente != NULL) {
 		desplazarYRenumerar(padre, a->primeraVersion, numeroNuevo, 1);
 	}
 	
 	// Crear nodo
 	Version nuevaVersion = crearVersion(numeroNuevo);
-	if (nuevaVersion == nullptr) {
+	if (nuevaVersion == NULL) {
 		strcpy(error, "Error al crear nodo de version");
 		liberarArrayVersion(secuencia);
 		return ERROR;
@@ -115,19 +115,19 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 	nuevaVersion->padre = padre;
 	
 	// Insertar en lista ordenada
-	if (padre != nullptr) {
-		if (padre->primerHijo == nullptr) {
+	if (padre != NULL) {
+		if (padre->primerHijo == NULL) {
 			padre->primerHijo = nuevaVersion;
 		} else {
 			Version actual = padre->primerHijo;
-			Version anterior = nullptr;
+			Version anterior = NULL;
 			
-			while (actual != nullptr && actual->numero < numeroNuevo) {
+			while (actual != NULL && actual->numero < numeroNuevo) {
 				anterior = actual;
 				actual = actual->siguienteHermano;
 			}
 			
-			if (anterior == nullptr) {
+			if (anterior == NULL) {
 				nuevaVersion->siguienteHermano = padre->primerHijo;
 				padre->primerHijo = nuevaVersion;
 			} else {
@@ -136,18 +136,18 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 			}
 		}
 	} else {
-		if (a->primeraVersion == nullptr) {
+		if (a->primeraVersion == NULL) {
 			a->primeraVersion = nuevaVersion;
 		} else {
 			Version actual = a->primeraVersion;
-			Version anterior = nullptr;
+			Version anterior = NULL;
 			
-			while (actual != nullptr && actual->numero < numeroNuevo) {
+			while (actual != NULL && actual->numero < numeroNuevo) {
 				anterior = actual;
 				actual = actual->siguienteHermano;
 			}
 			
-			if (anterior == nullptr) {
+			if (anterior == NULL) {
 				nuevaVersion->siguienteHermano = a->primeraVersion;
 				a->primeraVersion = nuevaVersion;
 			} else {
@@ -164,28 +164,28 @@ TipoRet CrearVersion(Archivo &a, char * version, char * error){
 
 // Elimina una versión del archivo si la version pasada por parámetro existe. En otro caso la operación quedará sin efecto.
 TipoRet BorrarVersion(Archivo &a, char * version){
-	if (a == nullptr || version == nullptr) {
+	if (a == NULL || version == NULL) {
 		return ERROR;
 	}
 	
 	// 1. Parsear la versión
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		return ERROR;
 	}
 	
 	// 2. Caso especial: Única versión "1"
 	if (longitud == 1 && secuencia[0] == 1) {
 		// Verificar si es la única versión
-		if (a->primeraVersion != nullptr && 
+		if (a->primeraVersion != NULL && 
 		    a->primeraVersion->numero == 1 && 
-		    a->primeraVersion->siguienteHermano == nullptr) {
+		    a->primeraVersion->siguienteHermano == NULL) {
 			// Es la única versión, liberar todo y dejar archivo vacío
 			liberarArbolVersiones(a->primeraVersion);
-			a->primeraVersion = nullptr;
+			a->primeraVersion = NULL;
 			liberarArrayVersion(secuencia);
 			return OK;
 		}
@@ -194,21 +194,21 @@ TipoRet BorrarVersion(Archivo &a, char * version){
 	// 3. Navegar a la versión a borrar
 	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	if (ver == nullptr) {
+	if (ver == NULL) {
 		liberarArrayVersion(secuencia);
 		return ERROR;
 	}
 	
 	// 4. Encontrar padre y hermano anterior
 	Version padre = ver->padre;
-	Version hermanoAnterior = nullptr;
+	Version hermanoAnterior = NULL;
 	Version hermanoSiguiente = ver->siguienteHermano;
 	
 	// Buscar hermano anterior
-	if (padre != nullptr) {
+	if (padre != NULL) {
 		// No es de primer nivel, buscar en hijos del padre
 		Version actual = padre->primerHijo;
-		while (actual != nullptr && actual->siguienteHermano != ver) {
+		while (actual != NULL && actual->siguienteHermano != ver) {
 			actual = actual->siguienteHermano;
 		}
 		hermanoAnterior = actual;
@@ -216,10 +216,10 @@ TipoRet BorrarVersion(Archivo &a, char * version){
 		// Es de primer nivel, buscar en primeraVersion
 		if (a->primeraVersion == ver) {
 			// Es el primero, no hay hermano anterior
-			hermanoAnterior = nullptr;
+			hermanoAnterior = NULL;
 		} else {
 			Version actual = a->primeraVersion;
-			while (actual != nullptr && actual->siguienteHermano != ver) {
+			while (actual != NULL && actual->siguienteHermano != ver) {
 				actual = actual->siguienteHermano;
 			}
 			hermanoAnterior = actual;
@@ -227,12 +227,12 @@ TipoRet BorrarVersion(Archivo &a, char * version){
 	}
 	
 	// 5. Actualizar punteros
-	if (hermanoAnterior != nullptr) {
+	if (hermanoAnterior != NULL) {
 		// Hay hermano anterior, actualizar su siguiente
 		hermanoAnterior->siguienteHermano = hermanoSiguiente;
 	} else {
 		// No hay hermano anterior, es el primero
-		if (padre != nullptr) {
+		if (padre != NULL) {
 			// Actualizar primerHijo del padre
 			padre->primerHijo = hermanoSiguiente;
 		} else {
@@ -242,13 +242,13 @@ TipoRet BorrarVersion(Archivo &a, char * version){
 	}
 	
 	// 6. Desconectar el nodo antes de liberar
-	ver->siguienteHermano = nullptr;
+	ver->siguienteHermano = NULL;
 	
 	// 7. Liberar el nodo y sus hijos (NO hermanos porque ya los desconectamos)
 	liberarArbolVersiones(ver);
 	
 	// 8. Renumerar hermanos posteriores (decrementar en 1)
-	if (hermanoSiguiente != nullptr) {
+	if (hermanoSiguiente != NULL) {
 		renumerarHermanosPosteriores(hermanoSiguiente, -1);
 	}
 	
@@ -309,12 +309,12 @@ TipoRet MostrarVersiones(Archivo a){
 
 // Esta función inserta una linea de texto a la version parámetro en la posición nroLinea.
 TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nroLinea, char * error){
-	if (a == nullptr) {
+	if (a == NULL) {
 		strcpy(error, "Archivo no existe");
 		return ERROR;
 	}
 	
-	if (version == nullptr || linea == nullptr) {
+	if (version == NULL || linea == NULL) {
 		strcpy(error, "Version o linea son NULL");
 		return ERROR;
 	}
@@ -325,11 +325,11 @@ TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nro
 	}
 	
 	// Parsear la versión jerárquica
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		strcpy(error, "Version invalida");
 		return ERROR;
 	}
@@ -337,7 +337,7 @@ TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nro
 	// Navegar al nodo de la versión
 	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	if (ver == nullptr) {
+	if (ver == NULL) {
 		liberarArrayVersion(secuencia);
 		strcpy(error, "Version no existe");
 		return ERROR;
@@ -374,12 +374,12 @@ TipoRet InsertarLinea(Archivo &a, char * version, char * linea, unsigned int nro
 
 // Esta función elimina una línea de texto de la version del archivo a en la posición nroLinea.
 TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * error){
-	if (a == nullptr) {
+	if (a == NULL) {
 		strcpy(error, "Archivo no existe");
 		return ERROR;
 	}
 	
-	if (version == nullptr) {
+	if (version == NULL) {
 		strcpy(error, "Version es NULL");
 		return ERROR;
 	}
@@ -390,11 +390,11 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 	}
 	
 	// Parsear la versión jerárquica
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		strcpy(error, "Version invalida");
 		return ERROR;
 	}
@@ -402,7 +402,7 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 	// Navegar al nodo de la versión
 	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	if (ver == nullptr) {
+	if (ver == NULL) {
 		liberarArrayVersion(secuencia);
 		strcpy(error, "Version no existe");
 		return ERROR;
@@ -437,7 +437,7 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 	liberarListaLineas(texto);
 	liberarArrayVersion(secuencia);
 	
-	Modificacion mod = crearModificacion(BORRADO, nroLinea, nullptr);
+	Modificacion mod = crearModificacion(BORRADO, nroLinea, NULL);
 	agregarModificacion(ver, mod);
 	
 	return OK;
@@ -445,23 +445,23 @@ TipoRet BorrarLinea(Archivo &a, char * version, unsigned int nroLinea, char * er
 
 // Esta función muestra el texto completo de la version, teniendo en cuenta los cambios realizados en dicha versión y en las versiones ancestras, de la cual ella depende.
 TipoRet MostrarTexto(Archivo a, char * version){
-	if (a == nullptr) {
+	if (a == NULL) {
 		return ERROR;
 	}
 
 	// Parsear la versión jerárquica (ej: "1.2.3")
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		return ERROR;
 	}
 	
 	// Navegar al nodo de la versión
 	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	if (ver == nullptr) {
+	if (ver == NULL) {
 		liberarArrayVersion(secuencia);
 		return ERROR;
 	}
@@ -482,7 +482,7 @@ TipoRet MostrarTexto(Archivo a, char * version){
 	// Mostrar el texto reconstruido
 	cout << "Archivo: " << a->nombre << " - Version " << version << endl << endl;
 	
-	if (texto == nullptr || contarLineas(texto) == 0) {
+	if (texto == NULL || contarLineas(texto) == 0) {
 		cout << "(versión sin líneas)" << endl;
 	} else {
 		imprimirListaLineas(texto);
@@ -497,23 +497,23 @@ TipoRet MostrarTexto(Archivo a, char * version){
 
 // Esta función muestra los cambios que se realizaron en el texto de la version parámetro, sin incluir los cambios realizados en las versiones ancestras de la cual dicha versión depende.
 TipoRet MostrarCambios(Archivo a, char * version){
-	if (a == nullptr) {
+	if (a == NULL) {
 		return ERROR;
 	}
 	
 	// Parsear la versión jerárquica
-	int* secuencia = nullptr;
+	int* secuencia = NULL;
 	int longitud = 0;
 	secuencia = parsearVersion(version, &longitud);
 	
-	if (secuencia == nullptr) {
+	if (secuencia == NULL) {
 		return ERROR;
 	}
 	
 	// Navegar al nodo de la versión
 	Version ver = navegarAVersion(a->primeraVersion, secuencia, longitud);
 	
-	if (ver == nullptr) {
+	if (ver == NULL) {
 		liberarArrayVersion(secuencia);
 		return ERROR;
 	}
@@ -522,7 +522,7 @@ TipoRet MostrarCambios(Archivo a, char * version){
 	cout << "Cambios de la version " << version << ":\n\n";
 	
 	// Verificar si hay modificaciones
-	if (ver->primeraModificacion == nullptr) {
+	if (ver->primeraModificacion == NULL) {
 		cout << "(sin modificaciones propias)\n";
 		liberarArrayVersion(secuencia);
 		return OK;
@@ -530,7 +530,7 @@ TipoRet MostrarCambios(Archivo a, char * version){
 	
 	// Recorrer SOLO las modificaciones de esta versión (NO ancestros)
 	Modificacion actual = ver->primeraModificacion;
-	while (actual != nullptr) {
+	while (actual != NULL) {
 		if (actual->tipo == INSERCION) {
 			cout << "INSERCION(" << actual->nroLinea << ", \"" 
 			     << actual->textoLinea << "\")\n";
@@ -722,5 +722,135 @@ TipoRet Iguales(Archivo a, char * version1, char * version2, bool &iguales){
 
 // Esta función crea una nueva versión al final del primer nivel con todos los cambios de la version especificada y de sus versiones ancestras. La versión que se crea debe ser independiente de cualquier otra versión.
 TipoRet VersionIndependiente(Archivo &a, char * version){
-	return NO_IMPLEMENTADA;
+	if (a == NULL || version == NULL) {
+		return ERROR;
+	}
+	
+	// 1. Parsear y navegar a la versión origen
+	int longitud = 0;
+	int* secuencia = parsearVersion(version, &longitud);
+	if (secuencia == NULL) {
+		return ERROR;
+	}
+	
+	Version versionOrigen = navegarAVersion(a->primeraVersion, secuencia, longitud);
+	if (versionOrigen == NULL) {
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	// 2. Obtener camino de ancestros (igual que en Iguales)
+	int longitudCamino = 0;
+	Version* camino = new Version[100];
+	obtenerCaminoAncestros(versionOrigen, camino, &longitudCamino);
+	
+	// 3. Reconstruir texto completo aplicando todas las modificaciones (igual que en Iguales)
+	const int MAX_LINEAS = 1000;
+	char** textoCompleto = new char*[MAX_LINEAS];
+	int cantLineas = 0;
+	for (int i = 0; i < MAX_LINEAS; i++) textoCompleto[i] = NULL;
+	
+	// Aplicar modificaciones de todos los ancestros en orden
+	for (int i = 0; i < longitudCamino; i++) {
+		Version ancestro = camino[i];
+		Modificacion mod = ancestro->primeraModificacion;
+		
+		while (mod != NULL) {
+			if (mod->tipo == INSERCION) {
+				unsigned int pos = mod->nroLinea;
+				if (pos >= 1 && pos <= (unsigned int)(cantLineas + 1) && cantLineas < MAX_LINEAS) {
+					// Desplazar líneas hacia abajo
+					for (int j = cantLineas; j >= (int)pos; j--) {
+						textoCompleto[j] = textoCompleto[j-1];
+					}
+					// Insertar nueva línea
+					if (mod->textoLinea != NULL) {
+						textoCompleto[pos-1] = new char[strlen(mod->textoLinea) + 1];
+						strcpy(textoCompleto[pos-1], mod->textoLinea);
+					} else {
+						textoCompleto[pos-1] = new char[1];
+						textoCompleto[pos-1][0] = '\0';
+					}
+					cantLineas++;
+				}
+			} else {  // BORRADO
+				unsigned int pos = mod->nroLinea;
+				if (pos >= 1 && pos <= (unsigned int)cantLineas) {
+					if (textoCompleto[pos-1] != NULL) {
+						delete[] textoCompleto[pos-1];
+					}
+					// Desplazar líneas hacia arriba
+					for (int j = pos-1; j < cantLineas-1; j++) {
+						textoCompleto[j] = textoCompleto[j+1];
+					}
+					textoCompleto[cantLineas-1] = NULL;
+					cantLineas--;
+				}
+			}
+			mod = mod->siguiente;
+		}
+	}
+	
+	// 4. Encontrar último número de nivel 1
+	int ultimoNumero = 0;
+	Version actual = a->primeraVersion;
+	while (actual != NULL) {
+		if (actual->numero > ultimoNumero) {
+			ultimoNumero = actual->numero;
+		}
+		actual = actual->siguienteHermano;
+	}
+	
+	int numeroNuevo = ultimoNumero + 1;
+	
+	// 5. Crear nueva versión de nivel 1 (sin padre, independiente)
+	Version nuevaVersion = crearVersion(numeroNuevo);
+	if (nuevaVersion == NULL) {
+		// Liberar memoria temporal
+		for (int i = 0; i < cantLineas; i++) {
+			if (textoCompleto[i] != NULL) {
+				delete[] textoCompleto[i];
+			}
+		}
+		delete[] textoCompleto;
+		delete[] camino;
+		liberarArrayVersion(secuencia);
+		return ERROR;
+	}
+	
+	nuevaVersion->padre = NULL;  // ¡CLAVE! Es independiente, sin padre
+	
+	// 6. Agregar nueva versión al final de la lista de nivel 1
+	if (a->primeraVersion == NULL) {
+		a->primeraVersion = nuevaVersion;
+	} else {
+		Version ultimo = a->primeraVersion;
+		while (ultimo->siguienteHermano != NULL) {
+			ultimo = ultimo->siguienteHermano;
+		}
+		ultimo->siguienteHermano = nuevaVersion;
+	}
+	
+	// 7. Convertir cada línea del texto reconstruido en una INSERCION nueva
+	// Esto hace que la nueva versión sea independiente - no necesita ancestros
+	for (int i = 0; i < cantLineas; i++) {
+		if (textoCompleto[i] != NULL) {
+			Modificacion mod = crearModificacion(INSERCION, i + 1, textoCompleto[i]);
+			if (mod != NULL) {
+				agregarModificacion(nuevaVersion, mod);
+			}
+		}
+	}
+	
+	// 8. Liberar memoria temporal
+	for (int i = 0; i < cantLineas; i++) {
+		if (textoCompleto[i] != NULL) {
+			delete[] textoCompleto[i];
+		}
+	}
+	delete[] textoCompleto;
+	delete[] camino;
+	liberarArrayVersion(secuencia);
+	
+	return OK;
 }

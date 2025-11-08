@@ -79,7 +79,7 @@ ERROR SUMMARY: 0 errors from 0 contexts
 int longitud;
 int* secuencia = parsearVersion("1.2.3.4", &longitud);
 Version v = navegarAVersion(archivo->primeraVersion, secuencia, longitud);
-if (v != nullptr) {
+if (v != NULL) {
     // Versión encontrada
 }
 liberarArrayVersion(secuencia);

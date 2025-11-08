@@ -6,7 +6,7 @@
 using namespace std;
 
 void mostrarArbol(Version v, int nivel = 0) {
-    if (v == nullptr) return;
+    if (v == NULL) return;
     
     for (int i = 0; i < nivel; i++) cout << "  ";
     cout << v->numero << endl;
@@ -59,8 +59,8 @@ int main() {
     // 3. IMPORTANTE: Antes de liberar, debemos desconectar v2 de sus hermanos
     // porque liberarArbolVersiones libera hermanos también
     Version hijosV2 = v2->primerHijo;
-    v2->primerHijo = nullptr;
-    v2->siguienteHermano = nullptr;
+    v2->primerHijo = NULL;
+    v2->siguienteHermano = NULL;
     
     cout << "\n[Liberando version 2...]" << endl;
     liberarVersion(v2); // Liberar solo el nodo v2

@@ -39,7 +39,7 @@ bool validarSinHuecos(Version padre, Version primeraVersion, int numeroNuevo);
 **Propósito:** Validar que un nuevo número de versión no cree huecos en la numeración de hermanos.
 
 **Parámetros:**
-- `padre`: Versión padre (puede ser `nullptr` para primer nivel)
+- `padre`: Versión padre (puede ser `NULL` para primer nivel)
 - `primeraVersion`: Primera versión del nivel (para primer nivel)
 - `numeroNuevo`: Número que se desea asignar a la nueva versión
 
@@ -141,7 +141,7 @@ Estas validaciones serán utilizadas por `CrearVersion` en TARJETA 6:
 ```c
 Ret CrearVersion(Archivo& archivo, Cadena nombreVersion) {
     // 1. Parsear versión
-    int* secuencia = nullptr;
+    int* secuencia = NULL;
     int longitud = 0;
     if (!parsearVersion(nombreVersion, secuencia, longitud)) {
         return ERROR_FORMATO;
@@ -159,7 +159,7 @@ Ret CrearVersion(Archivo& archivo, Cadena nombreVersion) {
     // 4. VALIDAR SIN HUECOS
     Version padre = (longitud > 1) ? 
         navegarAVersion(archivo->primeraVersion, secuencia, longitud-1) : 
-        nullptr;
+        NULL;
     
     if (!validarSinHuecos(padre, archivo->primeraVersion, numeroNuevo)) {
         liberarArrayVersion(secuencia, longitud);

@@ -49,7 +49,7 @@ if (longitud > 1) {
 }
 ```
 - Navega hasta el nodo padre
-- Si es primer nivel, padre = nullptr
+- Si es primer nivel, padre = NULL
 
 #### PASO 5: Validar Sin Huecos
 ```c
@@ -63,11 +63,11 @@ if (!validarSinHuecos(padre, a->primeraVersion, numeroNuevo)) {
 
 #### PASO 6: Verificar Existencia (Desplazamiento)
 ```c
-Version hermanos = (padre != nullptr) ? padre->primerHijo : a->primeraVersion;
-Version existente = (padre != nullptr) ? buscarHijo(padre, numeroNuevo) 
+Version hermanos = (padre != NULL) ? padre->primerHijo : a->primeraVersion;
+Version existente = (padre != NULL) ? buscarHijo(padre, numeroNuevo) 
                                        : buscarVersionEnLista(hermanos, numeroNuevo);
 
-if (existente != nullptr) {
+if (existente != NULL) {
     desplazarYRenumerar(padre, a->primeraVersion, numeroNuevo, 1);
 }
 ```
@@ -80,33 +80,33 @@ if (existente != nullptr) {
 Version nuevaVersion = crearVersion(numeroNuevo);
 ```
 - Crea el nodo de versión con malloc
-- Inicializa todos los punteros en nullptr
+- Inicializa todos los punteros en NULL
 
 #### PASO 8: Establecer Puntero al Padre
 ```c
 nuevaVersion->padre = padre;
 ```
 - Conecta el hijo con su padre
-- Para primer nivel, padre = nullptr
+- Para primer nivel, padre = NULL
 
 #### PASO 9: Insertar en Lista de Hermanos (Orden Numérico)
 ```c
-// Caso 1: Subversiones (padre != nullptr)
-if (padre != nullptr) {
-    if (padre->primerHijo == nullptr) {
+// Caso 1: Subversiones (padre != NULL)
+if (padre != NULL) {
+    if (padre->primerHijo == NULL) {
         padre->primerHijo = nuevaVersion;
     } else {
         // Insertar en orden numérico
-        while (actual != nullptr && actual->numero < numeroNuevo) {
+        while (actual != NULL && actual->numero < numeroNuevo) {
             anterior = actual;
             actual = actual->siguienteHermano;
         }
         // Insertar en posición correcta
     }
 }
-// Caso 2: Primer nivel (padre == nullptr)
+// Caso 2: Primer nivel (padre == NULL)
 else {
-    if (a->primeraVersion == nullptr) {
+    if (a->primeraVersion == NULL) {
         a->primeraVersion = nuevaVersion;
     } else {
         // Insertar en orden numérico
@@ -133,13 +133,13 @@ return OK;
 **Versión INCORRECTA (inicial):**
 ```c
 void renumerarSubarbol(Version raiz, int delta) {
-    if (raiz == nullptr) return;
+    if (raiz == NULL) return;
     
     raiz->numero += delta;
     
     // ❌ ERROR: Renumeraba recursivamente los hijos
     Version hijo = raiz->primerHijo;
-    while (hijo != nullptr) {
+    while (hijo != NULL) {
         renumerarSubarbol(hijo, delta);  // Recursión incorrecta
         hijo = hijo->siguienteHermano;
     }
@@ -154,7 +154,7 @@ void renumerarSubarbol(Version raiz, int delta) {
 **Versión CORRECTA (final):**
 ```c
 void renumerarSubarbol(Version raiz, int delta) {
-    if (raiz == nullptr) return;
+    if (raiz == NULL) return;
     
     raiz->numero += delta;
     
@@ -310,17 +310,17 @@ Return OK
 
 ### 1. Primera Versión del Archivo
 - Array vacío → crear "1"
-- `a->primeraVersion == nullptr`
+- `a->primeraVersion == NULL`
 - Asigna directamente: `a->primeraVersion = nuevaVersion`
 
 ### 2. Primer Hijo de un Padre
 - Padre sin hijos → crear ".1"
-- `padre->primerHijo == nullptr`
+- `padre->primerHijo == NULL`
 - Asigna: `padre->primerHijo = nuevaVersion`
 
 ### 3. Desplazamiento en Primer Nivel
 - Usa `buscarVersionEnLista()` en lugar de `buscarHijo()`
-- Maneja correctamente `padre == nullptr`
+- Maneja correctamente `padre == NULL`
 
 ### 4. Desplazamiento con Hijos
 - Los hijos mantienen su número relativo
@@ -359,7 +359,7 @@ Return OK
 **Código Corregido:**
 ```c
 void renumerarSubarbol(Version raiz, int delta) {
-    if (raiz == nullptr) return;
+    if (raiz == NULL) return;
     raiz->numero += delta;
     // NO llamar recursivamente en hijos
 }
@@ -369,10 +369,10 @@ void renumerarSubarbol(Version raiz, int delta) {
 
 ### Problema 3: BuscarHijo() No Funciona en Primer Nivel
 **Síntoma:** Desplazamiento fallaba en primer nivel
-**Causa:** `buscarHijo(nullptr, numero)` retorna nullptr siempre
+**Causa:** `buscarHijo(NULL, numero)` retorna NULL siempre
 **Solución:** 
 ```c
-Version existente = (padre != nullptr) ? buscarHijo(padre, numeroNuevo) 
+Version existente = (padre != NULL) ? buscarHijo(padre, numeroNuevo) 
                                        : buscarVersionEnLista(hermanos, numeroNuevo);
 ```
 **Resultado:** Desplazamiento funciona en ambos niveles ✅

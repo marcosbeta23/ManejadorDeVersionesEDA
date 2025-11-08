@@ -222,7 +222,7 @@ TipoRet CrearVersion(Archivo& a, char* version) {
     int longitud;
     int* numeros = parsearVersion(version, &longitud);
     
-    if (numeros == nullptr) {
+    if (numeros == NULL) {
         cout << "Error: versión inválida" << endl;
         return ERROR;
     }
@@ -242,7 +242,7 @@ TipoRet BorrarVersion(Archivo& a, char* version) {
     int longitud;
     int* numeros = parsearVersion(version, &longitud);
     
-    if (numeros == nullptr) {
+    if (numeros == NULL) {
         cout << "Error: versión inválida" << endl;
         return ERROR;
     }

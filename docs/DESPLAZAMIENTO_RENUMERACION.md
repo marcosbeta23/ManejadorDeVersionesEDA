@@ -160,7 +160,7 @@ El desplazamiento se usa en `CrearVersion` cuando se detecta que el número ya e
 ```c
 Ret CrearVersion(Archivo& archivo, Cadena nombreVersion) {
     // 1. Parsear versión
-    int* secuencia = nullptr;
+    int* secuencia = NULL;
     int longitud = 0;
     parsearVersion(nombreVersion, secuencia, longitud);
     
@@ -173,17 +173,17 @@ Ret CrearVersion(Archivo& archivo, Cadena nombreVersion) {
     int numeroNuevo = secuencia[longitud - 1];
     Version padre = (longitud > 1) ? 
         navegarAVersion(archivo->primeraVersion, secuencia, longitud-1) : 
-        nullptr;
+        NULL;
     
     if (!validarSinHuecos(padre, archivo->primeraVersion, numeroNuevo)) {
         return ERROR;
     }
     
     // 4. Verificar si número existe → DESPLAZAMIENTO
-    Version hermanos = (padre != nullptr) ? padre->primerHijo : archivo->primeraVersion;
+    Version hermanos = (padre != NULL) ? padre->primerHijo : archivo->primeraVersion;
     Version existente = buscarHijo(padre, numeroNuevo);
     
-    if (existente != nullptr) {
+    if (existente != NULL) {
         // El número existe, desplazar desde esa posición
         desplazarYRenumerar(padre, archivo->primeraVersion, numeroNuevo, +1);
     }

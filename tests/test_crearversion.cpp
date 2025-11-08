@@ -40,25 +40,25 @@ void testCrearVersion(const char* nombre, bool esperaExito) {
 
 // Función auxiliar para verificar que una versión existe
 bool versionExiste(Archivo a, const char* versionStr) {
-    int* secuencia = nullptr;
+    int* secuencia = NULL;
     int longitud = 0;
     secuencia = parsearVersion(versionStr, &longitud);
     
-    if (secuencia == nullptr) {
+    if (secuencia == NULL) {
         return false;
     }
     
     Version v = navegarAVersion(a->primeraVersion, secuencia, longitud);
     liberarArrayVersion(secuencia);
     
-    return (v != nullptr);
+    return (v != NULL);
 }
 
 // Función auxiliar para contar versiones de primer nivel
 int contarVersionesPrimerNivel(Archivo a) {
     int count = 0;
     Version actual = a->primeraVersion;
-    while (actual != nullptr) {
+    while (actual != NULL) {
         count++;
         actual = actual->siguienteHermano;
     }
@@ -69,7 +69,7 @@ int contarVersionesPrimerNivel(Archivo a) {
 int contarHijos(Version padre) {
     int count = 0;
     Version actual = padre->primerHijo;
-    while (actual != nullptr) {
+    while (actual != NULL) {
         count++;
         actual = actual->siguienteHermano;
     }
@@ -175,7 +175,7 @@ int main() {
         
         int seq[] = {1};
         Version v1 = navegarAVersion(a->primeraVersion, seq, 1);
-        bool ok = (ret == OK) && versionExiste(a, "1.1") && (v1 != nullptr) && 
+        bool ok = (ret == OK) && versionExiste(a, "1.1") && (v1 != NULL) && 
                   (contarHijos(v1) == 1);
         
         if (ok) {
@@ -204,7 +204,7 @@ int main() {
         int seq[] = {1};
         Version v1 = navegarAVersion(a->primeraVersion, seq, 1);
         bool ok = (ret == OK) && versionExiste(a, "1.1") && versionExiste(a, "1.2") && 
-                  versionExiste(a, "1.3") && (v1 != nullptr) && (contarHijos(v1) == 3);
+                  versionExiste(a, "1.3") && (v1 != NULL) && (contarHijos(v1) == 3);
         
         if (ok) {
             cout << COLOR_CYAN << "TEST: " << COLOR_RESET << "Crear subversiones '1.1', '1.2', '1.3' → " 

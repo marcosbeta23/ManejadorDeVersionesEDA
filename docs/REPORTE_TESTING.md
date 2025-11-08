@@ -170,7 +170,7 @@ cat tests/test_minimo.txt | valgrind --leak-check=full --show-leak-kinds=all ./m
 
 ### Sistema de Deltas
 - ✅ **INSERCION**: Guarda texto completo
-- ✅ **BORRADO**: No guarda texto (nullptr)
+- ✅ **BORRADO**: No guarda texto (NULL)
 - ✅ Reconstrucción correcta aplicando modificaciones en orden
 - ✅ Versiones independientes (cada una con sus propias modificaciones)
 
@@ -226,7 +226,7 @@ El proyecto implementa correctamente un sistema de control de versiones basado e
 Implementación correcta con:
 - `new`/`delete` para memoria dinámica
 - Liberación recursiva en BorrarArchivo
-- Asignación de nullptr después de liberar
+- Asignación de NULL después de liberar
 
 ### Extensibilidad (Fase 2)
 La estructura está preparada para:
