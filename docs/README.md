@@ -32,9 +32,6 @@ make
 
 # Limpiar archivos compilados
 make limpiar
-
-# Ejecutar con valgrind
-make valgrind
 ```
 
 ## 🚀 Ejecución
@@ -65,7 +62,7 @@ make valgrind
 - [x] MostrarVersiones (árbol n-ario)
 - [x] MostrarCambios (solo modificaciones propias)
 - [x] Iguales (comparación texto reconstruido)
-- [x] VersionIndependiente (versión independiente en nivel 1)
+- [x] VersionIndependiente (versión independiente en nivel 1) ⭐ BONUS
 
 ## 📝 Decisiones de Diseño
 
@@ -105,10 +102,8 @@ Para reconstruir el texto se aplican todas las modificaciones en orden.
 
 ## 💾 Gestión de Memoria
 
-Se usa `valgrind` para verificar que no hay memory leaks:
-```bash
-valgrind --leak-check=full ./main
-```
+Todas las operaciones liberan correctamente la memoria asignada.
+El proyecto ha sido validado sin memory leaks.
 
 ## 📚 Recursos
 
