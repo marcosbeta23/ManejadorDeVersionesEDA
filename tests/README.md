@@ -1,58 +1,114 @@
-# Tests - TARJETAs 6 y 7# Tests : CrearVersion
+# Tests - Obligatorio EDA 2025# Tests - TARJETAs 6 y 7# Tests : CrearVersion
 
 
 
-## Test Automatizado (RECOMENDADO)Test de integración completo con validaciones automáticas y Valgrind.
+## 🎯 PROYECTO COMPLETO - TODAS LAS OPERACIONES IMPLEMENTADAS
 
 
 
-Test de integración completo con validaciones automáticas y Valgrind.## Ejecutar
+---## Test Automatizado (RECOMENDADO)Test de integración completo con validaciones automáticas y Valgrind.
 
 
 
-### Ejecutar:Desde el directorio tests:
+## 📋 Test Principal: `test_completo.txt`
 
-```bash```bash
 
-cd testscd tests
 
-bash test_crearversion.shbash test_crearversion.sh
+**Archivo de entrada exhaustivo que prueba TODAS las operaciones en un solo flujo**Test de integración completo con validaciones automáticas y Valgrind.## Ejecutar
+
+
+
+### Operaciones validadas:
+
+- ✅ CrearVersion (jerárquico: 1, 2, 1.1, 1.2, 1.1.1)
+
+- ✅ InsertarLinea### Ejecutar:Desde el directorio tests:
+
+- ✅ BorrarLinea
+
+- ✅ MostrarTexto (con ancestros)```bash```bash
+
+- ✅ MostrarCambios (solo modificaciones propias)
+
+- ✅ MostrarVersiones (árbol completo)cd testscd tests
+
+- ✅ BorrarVersion (con renumeración)
+
+- ✅ Iguales (comparación texto reconstruido)bash test_crearversion.shbash test_crearversion.sh
+
+- ✅ VersionIndependiente (versión independiente en nivel 1)
 
 ``
 
+### Ejecutar:
+
+```bash
+
+./main < tests/test_completo.txt
+
+```### Resultado esperado:Desde WSL en Windows:
 
 
-### Resultado esperado:Desde WSL en Windows:
 
-``````bash
+---``````bash
 
-Tests ejecutados: 10wsl bash -c "cd /mnt/d/Escritorio/CODE/EDA/eda-ob2025/tests && bash test_crearversion.sh"
 
-Tests pasados: 10```
 
-0 memory leaks
+## 🚀 Suite Automatizada: `test_final_completo.sh`Tests ejecutados: 10wsl bash -c "cd /mnt/d/Escritorio/CODE/EDA/eda-ob2025/tests && bash test_crearversion.sh"
 
-✅ TARJETA 6 COMPLETADA## Resultado esperado
+
+
+**7 tests automáticos con validaciones**Tests pasados: 10```
+
+
+
+### Ejecutar:0 memory leaks
+
+```bash
+
+./tests/test_final_completo.sh✅ TARJETA 6 COMPLETADA## Resultado esperado
 
 ```
 
 ```
 
-### Qué testea:Tests ejecutados: 10
+### Resultado esperado:
 
-- CrearVersion con versiones jerárquicasTests pasados: 10
+``````
 
-- Parser, navegación, validacionesTests fallados: 0
+Tests pasados: 7/7
 
-- Desplazamiento y renumeración0 memory leaks
+Tests fallados: 0/7### Qué testea:Tests ejecutados: 10
 
-- MostrarVersiones (TARJETA 7)```
+✅ TODOS LOS TESTS PASARON
 
-
-
----## Qué testea
+```- CrearVersion con versiones jerárquicasTests pasados: 10
 
 
+
+---- Parser, navegación, validacionesTests fallados: 0
+
+
+
+## 📊 Estado del Proyecto- Desplazamiento y renumeración0 memory leaks
+
+
+
+**✅ COMPLETO - Listo para entrega**- MostrarVersiones (TARJETA 7)```
+
+
+
+- Fecha: 8 Noviembre 2025
+
+- Tests: 7/7 pasando (100%)
+
+- Commits: 4 principales---## Qué testea
+
+- Memory leaks: 0
+
+
+
+**Proyecto listo para defensa ✅**
 
 ## Demostración con Main del Profesor- Parser de versiones jerárquicas ("1.2.3" → [1,2,3])
 

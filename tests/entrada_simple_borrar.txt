@@ -1,8 +1,0 @@
-miarchivo
-CrearVersion(1)
-CrearVersion(2)
-CrearVersion(3)
-MostrarVersiones()
-BorrarVersion(2)
-MostrarVersiones()
-salir
